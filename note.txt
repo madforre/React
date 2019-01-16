@@ -1,0 +1,2 @@
+when deploying, replace "development.js" with "production.min.js"
+
