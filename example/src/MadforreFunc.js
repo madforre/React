@@ -5,7 +5,7 @@ const MadforreFunc = ({ name }) => {
         <div>
             Hello! I'm {name}.
         </div>
-    );
-};
+    )
+}
 
 export default MadforreFunc;
