@@ -254,8 +254,199 @@ setState
 
 setState에 객체 대신 함수를 전달하기
 
-    - 이해가 안되는 부분
+    setState 함수에 인자를 object로 줄 경우 setState는 비동기로 작동한다.
 
+    * 비동기로 작동한다는 것은 순서를 보장하지 못하고 순서가 중요한 로직일 경우 
+      예측되지 않은 결과를 초래할 수 있다.
+
+      비동기로 작동한다는 것은 순서를 보장하지 못하고 순서가 중요한 로직일 경우 예측되지 않은 결과를 초래할 수 있다.
+
+        setState({count: this.state.count+1});
+        setState({count: this.state.count+1});
+        setState({count: this.state.count+1});
+
+      한 함수안에서 위의 코드가 실행되면 +3을 기대하게 되지만 실제로는 +1 된다.
+      내부적으로 한꺼번에 처리하기 때문에 +3이 +1 되는 경우가 생길 수 있다.
+
+      하지만 함수형으로 실행할 경우
+
+        setState((state, props)=>({count: state.count+1}));
+        setState((state, props)=>({count: state.count+1}));
+
+        실행 큐에 적재되어 차례차례 실행된다.
+
+        함수형 프로그래밍은 많은 점에서 장점이 있다.
+        테스트가 쉽고 선언적이라 직관적이고 재사용도 용이하다.
+        간단한 상태 변화라도 여러면에서 함수형으로 작성하는 편이 더 유용할 것이다.
+
+        출처: http://tbang.tistory.com/185 [heene]
+
+setState의 메소드 동작 방식
+
+    - 업데이트 할 상태(state)의 부분을 포함하는 객체를 setState 인자로 전달한다. 
+      다시 말하면, 전달한 객체에는 컴포넌트 상태(state)의 키에 해당하는 키가 있고 
+      setState()는 그 객체를 상태(state)에 머지(merge)하여 상태(state)를 
+      업데이트하거나 새로 설정한다. 말그대로, "상태를 셋 한다(set-state)".
+
+      setState에 업데이트할 객체를 전달한다.
+
+      Because of the amount of work involved, 
+      calling setState() might not immediately update your state.
+
+      React may batch multiple setState() calls into a single update for performance.
+
+    * Functional setState to the rescue! (The best-kept React secret)
+
+    
+
+ES6 지식 추가 보충
+
+    ES6에서는 extends 키워드로 상속을 구현합니다.
+
+    super 키워드
+
+        서브 클래스와 슈퍼 클래스에 같은 이름의 메서드가 존재하면 슈퍼 클래스의
+        메서드는 호출되지 않습니다. (오버라이딩 되었다고 생각하자.)
+
+        이때 super 키워드를 사용해서 슈퍼 클래스의 메서드를 호출할 수 있습니다. 
+        (서브 클래스의 constructor에 super()를 작성하면 슈퍼 클래스의 constructor가 호출됩니다.)
+
+    static 키워드
+    
+        static 키워드는 클래스를 위한 정적(static) 메소드를 정의합니다. 
+        정적 메소드는 prototype에 연결되지 않고 클래스에 직접 연결되기 때문에 
+        클래스의 인스턴스화(instantiating) 없이 호출되며, 
+        클래스의 인스턴스에서는 호출할 수 없습니다. 
+
+        동일한 클래스 내의 다른 정적 메서드 내에서 정적 메서드를 호출하는 경우 
+        키워드 this를 사용할 수 있음.
+
+ubuntu npm start 에러 (나중에 다시 실행할 때 ENO)
+
+    There is the limit in the number of files that can be watched in a system. 
+    We have to increase this number. The below command can be used to increase this number.
+
+    echo fs.inotify.max_user_watches=582222 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+클래스 필드 (Class Field)
+
+    클래스 블록 안에서 할당 연산자(=)를 이용해 인스턴스 속성을 지정할 수 있는 문법을 클래스 필드(class field)라고 합니다.
+
+ES6의 화살표 함수
+
+    화살표 함수(arrow function)는 ES6 문법에서 함수를 표현하는 새로운 방식입니다.
+    그렇다고 해서 기존 function을 이용한 함수 선언 방식을 아예 대체하지는 않습니다.
+    사용 용도가 조금 다릅니다. 이 문법은 주로 함수를 파라미터로 전달할 때 유용합니다.
+
+    * 이 문법이 기존 function을 대체할 수 없는 것은 용도가 다르기 때문입니다.
+
+      ex) 
+            function BlackDog() {
+                this.name = '흰둥이';
+                return {
+                    name: '검둥이',
+                    bark: function() {
+                        console.log(this.name+': 멍멍!');
+                    }
+                }
+            }
+
+            const blackDog = new BlackDog();
+            blackDog.bark(); // 검둥이: 멍멍!
+
+            function WhiteDog() {
+                this.name = '흰둥이';
+                return {
+                    name: '검둥이',
+                    bark:() => {
+                        console.log(this.name +': 멍멍!');
+                    }
+                }
+            }
+
+            const whiteDog = newWhiteDog();
+            whiteDog.bark(); // 흰둥이: 멍멍!
+
+        - function()을 사용했을 때는 검둥이가 나타나고, () => 를
+          사용했을 때는 흰둥이가 나타납니다. 
+
+          * 일반 함수는 자신의 종속된 객체를 this를 가리키며, 
+            화살표 함수는 자신이 종속된 인스턴스를 가리킵니다.
+            화살표 함수는 값을 연산하여 바로 반환해야 할 때 사용하면 
+            가독성이 높습니다.
+          
+        function twice(value) {
+            return value * 2;
+        }
+
+        const triple = (value) => value * 3;
+
+         - 위 코드처럼 이렇게 따로 {}를 열어 주지 않으면 연산한 값을 그대로
+           반환한다는 의미입니다.
+
+ES6 리터럴?
+
+    변수 및 상수에 저장되는 '값 자체' 를 일컫는 말.
+    코드 상에서 데이터를 표현하는 방식을 리터럴이라고 한다.
+    일반적으로 객체 중심 혹은 객체 지향 언어에서는 객체의 리터럴 표기법을
+    지원하게 된다.
+    리터럴 표기법이란, 변수를 선언함과 동시에 그 값을 지정해주는 표기법을 말한다.
+
+    ex) var no = 3;
+        var obj= {name:'kk', age:"59"};
+
+    리터럴 표기법은 비 정규적인 방법이 아니다.
+    성능 저하를 불러오지도 않으며, 코드는 더 짧다.
+    코드가 짧으니 자바스크립트 인터프리터의 해석분량도 줄어들어 더 빨라진다.
+
+ES6 비구조화 할당 destructuring assignment (구조 분해)
+
+    배열 비구조화(분해)
+
+        let [a, b] = [3, 4]; // a = 3, b = 4 를 대입
+        console.log(`${a}, ${b}`);  //  "3, 4"
+
+        [a, b] = [b, a]; // a = b, b = a를 대입(교환)
+        console.log(`${a}, ${b}`); // "4, 3"
+
+    객체 비구조화(분해)
+
+        let book = {
+            title : 'HTML',
+            price : 23000
+        };
+
+        let {title, price} = book; // book객체의 속성을 개별적으로 좌측의 변수에 전달
+        console.log(`${title}, ${price}`); // "HTML, 23000"
+
+
+        * 여기서 중요한 건 변수명과 객체 속성의 이름이 같아야한다는 것이다. 
+            그러나 다르게도 할 수는 있다.
+
+        let book = {
+            title : 'HTML',
+            price : 23000
+        };
+
+        let {title: newTitle, price: newPrice} = book;
+        console.log(`${newTitle}, ${newPrice}`;
+
+    * 선언 없이 객체 리터럴 비구조화 할당할 때는 ()로 할당문을 둘러싼다.
+
+        ex) this.setState(
+                ({ number }) => ({
+                number: number - 1
+                })
+            );
+
+    탬플릿 문자열
+
+        const a = "takeU"; 
+        const b = 24;
+
+        console.log(`Hello ${a} I'm ${b} year's old`)
+
+        // ${}안에 변수넣는 방법으로 ``사이에 함께 넣어 사용
 
 
 Context API

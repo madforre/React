@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 class Madforre extends Component {
+    // 초기 state는 transform-class-properties 문법으로
+    // constructor 바깥에서 정의할 수도 있음
     static defaultProps = {
         name : 'default'
     }

@@ -46,6 +46,26 @@ class Counter extends Component{
     //     });
     // }
 
+    // 함수표현식으로 작성 (기존에 작성했던 함수를 각각 다른 방식으로 구현)
+    // handleIncrease() {
+    //     const { number } = this.state;
+    //     this.setState(
+    //         (state) => ({
+    //             number: state.number
+    //         })
+    //     );
+    // }
+    
+    // 이거는 선언 없이 비구조화 할당한건데, var로 할당되는거 같다.
+    // 위에코드 쓰자.
+    // handleDecrease() {
+    //     this.setState(
+    //         ({ number }) => ({
+    //             number: number + 1
+    //         })
+    //     );
+    // }
+
     render() {
         return (
             <div>
