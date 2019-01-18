@@ -665,6 +665,52 @@ React LifeCycle API
     리액트 컴포넌트가 사용될 때 각 상황에 따라 호출되는 LifeCycle API 에 대해 숙지한다면
     여러 상황에 유용하게 쓸 수 있다.
 
+Computed Property Names
+
+    In ES6, you can use shorthand computed property names.
+
+        var fruit_var = 'fruit'
+        var eatables = {[fruit_var]: 'Apple', vegetable: 'Carrot'}
+        console.log(eatables) // {fruit: 'Apple', vegetable: 'Carrot'}
+
+    Not only that, you can even do javascript computations using computed property names
+
+        var eatables = {[fruit_var]: 'Apple', [fruit_var + ' Cake']: 'yummy' }
+        console.log(eatables) // {fruit: 'Apple', fruit Cake: 'yummy'}
+
+
+    * 즉 변수 값을 키로 쓸 수 있습니다
+
+        var sName = 'happy'
+        [ sName ] : value ==> happy : value
+
+부모 컴포넌트에게 정보 전달하기
+
+    자식 컴포넌트의 state 안에 있는 값들을 부모 컴포넌트에게 전달하려면
+    부모 컴포넌트에서 메소드를 만들고, 이 메소드를 자식에게 전달한 다음에
+    자식 내부에서 호출하는 방식을 사용한다.
+
+리액트 배열 다루기
+
+    리액트에서는 배열을 다룰 때 평상시에 하던 것처럼 하면 안된다.
+    리액트에서는 state 내부의 값을 직접적으로 수정하면 절대로 안된다.
+    이를 불변성 유지라고 하는데, push, splice, unshift, pop같은 내장함수는
+    배열 자체를 직접 수정하게 되므로 리액트와는 적합하지 않다.
+
+    그 대신에, 기존의 배열에 기반하여 새 배열을 만들어내는 함수인 concat, slice,
+    map, filter 같은 함수를 사용해야 한다.
+
+    * React에서는 불변성 유지가 중요하다. 불변셩 유지를 해줘야 리액트에서 모든것들이
+      필요한 상황에 리렌더링 되도록 설계할 수 있고, 그렇게해야 나중에 성능도 최적화 된다.
+
+
+    데이터 추가
+
+        나중에 가면 상태를 컴포넌트에서 분리하여 따로 관리한다.
+        일단 리액트 기초에 집중하자면, App 컴포넌트에서 상태를 관리하도록 하자.
+
+                
+
 Context API
 
     const Context = createContext(); // Context 를 만듭니다.

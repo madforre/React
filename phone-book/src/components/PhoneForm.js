@@ -10,12 +10,24 @@ class PhoneForm extends Component {
         this.setState({
             // 자바스크립트 문법
             // Computed property names
-            [e.target.name]:e.target.value
+            [e.target.name] : e.target.value
+        })
+    }
+    handleSubmit = (e) => {
+        /* 페이지 리로딩 방지 (form에서 submit 발생하면 페이지를 다시 불러오므로)
+           지니고 있는상태를 다 잃어버리기 때문에 방지해주어야 한다. */
+        e.preventDefault();
+        // 상태 값을 onCreate 를 통하여 부모에게 전달
+        this.props.onCreate(this.state);
+        // 상태 초기화
+        this.setState({
+            name: '',
+            phone: ''
         })
     }
     render() {
         return (
-            <form>
+            <form onSubmit={this.handleSubmit}>
                 {/* onChange 이벤트가 발생하면, e.target.value 값을 통하여 
                     이벤트 객체에 담겨있는 현재의 텍스트 값을 읽어올 수 있다. */}
                 <input
@@ -32,6 +44,7 @@ class PhoneForm extends Component {
                   onChange={this.handleChange}
                   name="phone"
                 />
+                <button type="submit">등록</button>
                 <div>{this.state.name} {this.state.phone}</div>
             </form>
         );
