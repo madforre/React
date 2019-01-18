@@ -50,7 +50,7 @@ class Counter extends Component{
     // 함수표현식으로 작성하는 것을 권장한다.
     // setState( {} ) vs setState( ()=>() )
     
-    // handleIncrease() {
+    // handleIncrease = () => {
     //     const { number } = this.state; // setState(JSON)인데 JSON 파라미터를 못넘겨주니깐 전역변수화 한 것
     //     this.setState({
     //             number: number + 1
@@ -60,7 +60,7 @@ class Counter extends Component{
     
     // 이거는 선언 없이 비구조화 할당한건데, var로 할당되는거 같다. 
     // setState(함수)형태로 파라미터가 람다식이라서 그 람다식에 파라미터를 { number }로 넘겨준 케이스
-    // handleDecrease() {
+    // handleDecrease =() => {
     //     this.setState(
     //         ({ number }) => ({
     //             number: number - 1

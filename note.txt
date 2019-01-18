@@ -539,6 +539,132 @@ React LifeCycle API
 
     - getSnapshotBeforeUpdate
 
+        이 API가 발생하는 시점은 다음과 같다.
+
+        1. render()
+        2. getSnapshotBeforeUpdate() - 여기서 발생
+        3. 실제 DOM에 변화 발생
+        4. componentDidUpdate
+
+        이 API를 통해서, DOM 변화가 일어나기 직전의 상태를 가져온다.
+        여기서 리턴하는 값은 componentDidUpdate 에서 3번째 파라미터로 받아올 수 있게
+        된다.
+
+        예시 코드 ---------------------------------------
+
+         getSnapshotBeforeUpdate(prevProps, prevState) {
+            // DOM 업데이트가 일어나기 직전의 시점입니다.
+            // 새 데이터가 상단에 추가되어도 스크롤바를 유지해보겠습니다.
+            // scrollHeight 는 전 후를 비교해서 스크롤 위치를 설정하기 위함이고,
+            // scrollTop 은, 이 기능이 크롬에 이미 구현이 되어있는데, 
+            // 이미 구현이 되어있다면 처리하지 않도록 하기 위함입니다.
+            if (prevState.array !== this.state.array) {
+                const {
+                    scrollTop, scrollHeight
+                } = this.list;
+
+                // 여기서 반환 하는 값은 componentDidMount 에서 snapshot 값으로 받아올 수 있습니다.
+                return {
+                    scrollTop, scrollHeight
+                };
+            }
+        }
+
+        componentDidUpdate(prevProps, prevState, snapshot) {
+            if (snapshot) {
+                const { scrollTop } = this.list;
+            if (scrollTop !== snapshot.scrollTop) return; // 기능이 이미 구현되어있다면 처리하지 않습니다.
+            const diff = this.list.scrollHeight - snapshot.scrollHeight;
+            this.list.scrollTop += diff;
+            }
+        }
+
+        예시 코드 끝 ---------------------------------------
+
+    - componentDidUpdate
+
+        componentDidUpdate(prevProps, prevState, snapshot) {
+
+        }
+
+        이 API는 컴포넌트에서 render()를 호출하고 난 다음에 발생하게 됩니다.
+        이 시점에선 this.props 와 this.state 가 바뀌어 있습니다.
+        또한 파라미터를 통해 이전의 값인 prevProps 와 prevState 를 조회 할 수
+        있습니다. 
+
+        getSnapshotBeforeUpdate 에서 반환한 snapshot 값은 세번째 파라미터로 
+        받아옵니다.
+
+    컴포넌트 제거
+
+        컴포넌트가 더 이상 필요하지 않게 되면 단 하나의 API가 호출됨.
+
+    - componentWillUnmount
+
+        componentWillUnmount() {
+            // 이벤트, setTimeout, 외부 라이브러리 인스턴스 제거
+        }
+
+        여기서는 주로 등록했었던 이벤트를 제거하고, 만약에 setTimeout 을 걸은 것이
+        있다면 clearTimeout 을 통하여 제거를 합니다.
+
+        추가적으로 외부 라이브러리를 사용한게 있고 해당 라이브러리에 dispose 기능이
+        있다면 여기서 호출하면 된다.(삭제패턴)
+
+    컴포넌트에 에러 발생
+
+        render 함수에서 에러가 발생한다면, 리액트 앱이 크래쉬 되어버립니다.
+        그러한 상황에 유용하게 사용할 수 있는 API가 한가지 있음.
+
+    - componentDidCatch
+
+        componentDidCatch(error, info) {
+            this.setState({
+                error: true
+            });
+        }
+
+        에러가 발생하면 componentDidCatch가 실행되게 하고,
+        state.error 를 true로 설정하여 render 함수쪽에서 이에 따라
+        에러를 띄운다.
+
+        이 API 사용시 주의점?
+
+            컴포넌트 자신의 render 함수에서 에러가 발생하는 것은 잡을 수 없음.
+            대신 자식 컴포넌트 내부에서 발생하는 에러들을 잡아낸다.
+
+        * 렌더링 부분에서 오류가발생하는 것은 사전에 방지해주어야 한다.
+
+            1. 존재하지 않는 함수를 호출하려고 할 때 (props로 받은줄 알았던 함수가 전달이 안됐을 때.)
+
+            2. 배열이나 객체가 올 줄 알았는데, 해당 객체나 배열이 존재하지 않을 때.
+
+                this.props.object.value; // object is undefined
+                this.props.array.length; // array is undefined
+
+          이러한 것들은 render 함수에서 다음과 같은 형식으로 막아 줄 수 있다.
+
+          render() {
+            if (!this.props.object || !this.props.array || this.props.array.length ===0) return null;
+            // object 나 array 를 사용하는 코드
+          }
+
+          혹은, 우리가 이전에 배웠었던 컴포넌트의 기본값을 설정하는 defaultProps를 통해서 설정하면 된다.
+    
+            class Sample extends Component {
+                static defaultProps = {
+                    onIncrement: () => console.warn('onIncrement is not defined'),
+                    object: {},
+                    array: []
+                }
+            }
+
+        하지만 이걸로도 놓쳐버린 버그들은 componentDidCatch 를 통해서 잡아주고,
+        필요시엔 에러의 세부내용을 서버쪽에 기록하게해서 조사한다.
+
+    리액트 컴포넌트가 사용될 때 각 상황에 따라 호출되는 LifeCycle API 에 대해 숙지한다면
+    여러 상황에 유용하게 쓸 수 있다.
+
 Context API
 
     const Context = createContext(); // Context 를 만듭니다.

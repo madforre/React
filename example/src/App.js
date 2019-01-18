@@ -3,6 +3,7 @@ import './App.css';
 import Madforre from './Madforre';
 import MadforreFunc from './MadforreFunc';
 import Counter from './Counter';
+import Lifecycle from './Lifecycle';
 
 class App extends Component {
   render() {
@@ -17,6 +18,8 @@ class App extends Component {
         />
         <MadforreFunc name="func component" />
         <Counter />
+        <hr></hr>
+        <Lifecycle />
       </div>
     );
   }
