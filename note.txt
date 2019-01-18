@@ -449,6 +449,96 @@ ES6 비구조화 할당 destructuring assignment (구조 분해)
         // ${}안에 변수넣는 방법으로 ``사이에 함께 넣어 사용
 
 
+setState에 객체 대신 함수 전달하기
+
+    - 추후 다시 볼것
+
+이벤트 설정
+
+    * 리액트에서 이벤트 함수를 설정할 때는 camelCase로 설정해야 한다.
+
+        ex) onclick은 onClick, onmousedown은 onMouseDown, onchange는 onChange...
+
+    * 이벤트에 전달하는 값은 함수여야 한다.
+      함수를 전달하되, 호출해서는 안된다.
+    
+        ex) onClick={this.handleIncrease()} 이래버리면
+            렌더링을 할 때마다 해당 함수가 호출된다.
+            렌더링 -> 함수 호출 -> setState -> 함수호출 -> 무한 
+            
+    렌더링 함수에서 이벤트를 설정 할 때 여러분이 만든 메소드를 호출하지 마세요!
+
+React LifeCycle API
+
+    컴포넌트 초기 생성
+
+    - constructor
+
+        constructor(props) {
+            super(props);
+        }
+
+        이 부분은 생성자 함수이다. 컴포넌트가 새로 만들어질 때마다 호출된다.
+
+    - componentDidMount
+
+        componentDidMount() {
+            // 외부 라이브러리 연동: D3, masonry, etc
+            // 컴포넌트에서 필요한 데이터 요청: Ajax, GraphQL, etc
+            // DOM 에 관련된 작업: 스크롤 설정, 크기 읽어오기 등
+        }
+
+        이 API는 컴포넌트가 화면에 나타나게 되었을 때 호출된다. 주로 D3, masonry 처럼 DOM을 사용해야 하는
+        외부 라이브러리를 연동을 하거나, 해당 컴포넌트에서 필요로 하는 데이터를 요청하기 위해 axios, fetch 등을 통하여
+        ajax 요청을 하거나, DOM의 속성을 읽거나 변경하는 작업등을 한다.
+
+    컴포넌트 업데이트
+
+     * 컴포넌트 업데이트는 props의 변화, 그리고 state의 변화에 따라 결정된다. 되기 전과 되기 후 시점과 관련된 API들이 있다.
+
+    - static getDerivedStateFromProps
+
+        static getDerivedStateFromProps(nextProps, prevState) {
+            // 여기서는 setState 를 하는 것이 아니라
+            // 특정 props 가 바뀔 때 설정하고 싶은 state 값을 리턴하는 형태로
+            // 사용됩니다.
+            /*
+            if (nextProps.value !== prevState.value {
+                return { value: nextProps.value };
+            }
+            return null; // null 을 리턴하면 따로 업데이트 할 것은 없다라는 의미
+        }
+
+        이 함수(API)는 props 로 받아온 값을 state 로 동기화하는 작업을 해줘야 하는 경우에 사용
+
+    - shouldComponentUpdate
+
+        shouldComponentUpdate(nextProps, nextState) {
+            // return false 하면 업데이트를 안함
+            // return this.props.checked !== nextProps.checked
+            return true;
+        }
+
+        이 API는 컴포넌트를 최적화하는 작업에서 매우 유용하게 사용된다.
+        리액트에서는 변화가 발생하는 부분만 업데이트를 해줘서 성능이 꽤 잘나온다.
+        하지만 변화가 발생한 부분만 감지해내기 위해서는 Virtual DOM 에 한번 그려줘야 한다.
+
+        즉, 현재 컴포넌트의 상태가 업데이트되지 않아도, 부모 컴포넌트가 리렌더링되면,
+        자식 컴포넌트들도 렌더링된다. 여기서 "렌더링" 된다는건, render() 함수가 호출된다는
+        의미이다.
+
+        변화가 없으면 물론 DOM 조작은 하지 않는다. 그저 Virtual DOM 에만 렌더링 할 뿐이다.
+        부하가 많은 작업은 아니지만, 컴포넌트가 무수히 많이 렌더링 된다면 이야기가 조금 달라진다.
+        CPU 자원이 어느정도 사용되기 때문.
+
+        쓸데없이 낭비되고 있는 이 CPU 처리량을 줄여주기 위해서는 Virtual DOM에 리렌더링 되는
+        불필요한 경우를 방지하기 위해 shouldComponentUpdate 를 작성한다.
+
+        이 함수는 기본적으로 true를 반환하나, 따로 작성을 해주어서 조건에 따라 false 를
+        반환하면 해당 조건에는 render 함수를 호출하지 않게된다.
+
+    - getSnapshotBeforeUpdate
+
 Context API
 
     const Context = createContext(); // Context 를 만듭니다.

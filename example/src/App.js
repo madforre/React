@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Madforre from './Madforre';
 import MadforreFunc from './MadforreFunc';
+import Counter from './Counter';
 
 class App extends Component {
   render() {
@@ -15,6 +16,7 @@ class App extends Component {
         // name ="madforre"
         />
         <MadforreFunc name="func component" />
+        <Counter />
       </div>
     );
   }

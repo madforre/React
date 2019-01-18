@@ -1,4 +1,3 @@
-// class fields 문법을 사용해서 정의
 import React, { Component } from 'react';
 
 class Counter extends Component{
@@ -41,27 +40,30 @@ class Counter extends Component{
     // }
 
     // handleDecrease() {
-    //     this.setState({
-    //         number: this.state.number - 1
-    //     });
+    //     this.setState(
+    //       (state) => ({
+    //          number: state.number - 1
+    //       })
+    //     );
     // }
 
-    // 함수표현식으로 작성 (기존에 작성했던 함수를 각각 다른 방식으로 구현)
+    // 함수표현식으로 작성하는 것을 권장한다.
+    // setState( {} ) vs setState( ()=>() )
+    
     // handleIncrease() {
-    //     const { number } = this.state;
-    //     this.setState(
-    //         (state) => ({
-    //             number: state.number
+    //     const { number } = this.state; // setState(JSON)인데 JSON 파라미터를 못넘겨주니깐 전역변수화 한 것
+    //     this.setState({
+    //             number: number + 1
     //         })
     //     );
     // }
     
-    // 이거는 선언 없이 비구조화 할당한건데, var로 할당되는거 같다.
-    // 위에코드 쓰자.
+    // 이거는 선언 없이 비구조화 할당한건데, var로 할당되는거 같다. 
+    // setState(함수)형태로 파라미터가 람다식이라서 그 람다식에 파라미터를 { number }로 넘겨준 케이스
     // handleDecrease() {
     //     this.setState(
     //         ({ number }) => ({
-    //             number: number + 1
+    //             number: number - 1
     //         })
     //     );
     // }
