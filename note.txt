@@ -220,7 +220,7 @@ setState
 
             // joining arrays
             const odd = [1, 3, 5];
-            const nums = [2 ,4 , 6].concat(odd);
+            const nums = [2, 4, 6].concat(odd);
 
             // cloning arrays
             const arr = [1, 2, 3, 4];
@@ -228,15 +228,15 @@ setState
 
           축약기법
 
-            * concat()함수와는 다르게 전개 연산자를 이용하면 
+            * concat() 함수와는 다르게 전개 연산자를 이용하면 
               하나의 배열을 다른 배열의 아무 곳에나 추가할 수 있음
 
             // joining arrays
-            const odd = [1, 3, 5 ];
-            const nums = [2, ...odd, 4 , 6];
-            console.log(nums); // [ 2, 4, 6, 1, 3, 5 ]
+            const odd = [1, 3, 5];
+            const nums = [2, ...odd, 4, 6];
+            console.log(nums); // [2, 1, 3, 5, 4, 6]
 
-        - 배열 복사
+            - 배열 복사
 
             // cloning arrays
             const arr = [1, 2, 3, 4];
@@ -297,7 +297,6 @@ setState의 메소드 동작 방식
 
     * Functional setState to the rescue! (The best-kept React secret)
 
-    
 
 ES6 지식 추가 보충
 
@@ -709,7 +708,118 @@ Computed Property Names
         나중에 가면 상태를 컴포넌트에서 분리하여 따로 관리한다.
         일단 리액트 기초에 집중하자면, App 컴포넌트에서 상태를 관리하도록 하자.
 
-                
+    데이터 렌더링
+
+        리액트를 다루는건 자바스크립트를 사용하는거랑 매우 비슷하다.
+        컴포넌트를 여러개 렌더링 하기 위해서는, 앵귤러 나 뷰 처럼 디렉티브 같은걸
+        사용 할 필요 없이, 자바스크립트 배열의 내장함수인 map을 사용하면 된다.
+
+        * Array.prototype.map()
+
+            map() 메서드는 배열 내의 모든 요소 각각에 대하여 주어진 함수를 호출한
+            결과를 모아 새로운 배열을 반환한다.
+
+            var array1 = [1, 4, 9, 16];
+
+            // pass a function to map
+            const map1 = array1.map(x => x * 2);
+    
+            console.log(map1);
+            // expected output: Array [2, 8, 18, 32]
+
+    컴포넌트 만들기
+
+        key 는 리액트에서 배열을 렌더링을 할 때 꼭 필요한 값입니다.
+        리액트는 배열을 렌더링 할 때 값을 통하여 업데이트 성능을 최척화 합니다.
+
+        * key 값 안정해놓으면 중간에 값이 들어가면 index 도 전부 다 바뀌기 때문.
+          우리가 데이터를 추가 할 때마다 고정적인 고유 값을 부여해주면, 
+          리액트가 변화를 감지해내고 업데이트를 하게 될 떄 조금 더 똑똑하게 처리 할 수 있게된다.
+
+        * key 값은 언제나 고유해야 합니다. (고정된 고유값이어야 한다.)
+
+        * Array.prototype.concat()
+
+            concat() 메서드는 인자로 주어진 배열이나 값들을 기존 배열에 합쳐서 새 배열을
+            반환합니다.
+
+            var array1 = ['a', 'b', 'c'];
+            var array2 = ['d', 'e', 'f'];
+
+            console.log(array1.concat(array2));
+            // expected output: Array ["a", "b", "c", "d", "e", "f"]
+
+
+          구문
+
+            var new_array = old_array.concat([...values])
+
+            values- 새 배열로 합쳐질 배열 또는 값.
+
+            반환 값은 새로운 Array 객체이다.
+
+        꼭 기억해야 할 점은 배열을 렌더링 하게 될 때에는 꼭 고유값을 key 로 사용해야 한다는 것.
+        그리고, 불변성 유지를 위하여 데이터를 조작 할 때에는 기존의 배열을 건들이지 않는 방식으로 해야 한다.
+
+    데이터 제거
+
+        우선 알아야 할 메서드
+        Array.prototype.slice()
+
+            slice 메서드는 어떤 배열의 begin 부터 end까지(end 미포함)에 대한 얕은 복사본을
+            새로운 배열 객체로 반환한다. 이 때 원본 배열은 수정되지 않는다.
+
+            ex) 
+
+                var animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
+
+                console.log(animals.slice(2));
+                // expected output: Array ["camel", "duck", "elephant"]
+                // end가 생략되면 slice는 배열의 끝까지(arr.length) 추출한다.
+
+                console.log(animals.slice(2, 4));
+                // expected output: Array ["camel", "duck"]
+
+                console.log(animals.slice(1, 5));
+                // expected output: Array ["bison", "camel", "duck", "elephant"]
+
+        기존의 배열 데이터를 건드리지 않으면서 데이터를 제거하기 위한 여러가지 방법이 있다.
+
+        ex)
+
+            const arr = [1,2,3,4,5];
+
+            배열에서 3을 제거할 것이다.
+            기존의 배열은 그대로 유지하고 새 배열을 만들어서 3을 제외시킨다.
+
+            * slice와 concat을 이용한 방법
+
+                array.slice(0,2).concat(array.slice(3,5)) // [1,2,4,5]
+
+              배열 전개 연산자를 사용하면 다음과 같이 구현도 가능하다. (배열 복사)
+
+                [ ...array.slice(0,2), ...array.slice(3,5) ];
+
+            위 방법 보다 훨씬 더 간단한 방법?
+            단순히 값이 3인 것을 없애면 된다.
+            배열에는 filter 라는 내장함수가 있는데, 이 함수는 특정 조건에 부합되는 원소들만
+            뽑아내서 새 배열을 만들어준다.
+            따라서, 3이 제외된 배열을 만들기 위해서 아래 코드를 작성하면 된다.
+
+            * filter를 이용한 방법
+
+                array.filter(num => num !== 3); // [1, 2, 4, 5]
+
+              이렇게 하면, 3이 아닌 것들만 필터링을 해서 새 배열을 보여주게 된다.
+
+        *** 이해안되는 부분 -> PhoneInfoList.js 에서 map 함수 사용시 / 추후 다시 확인할 것
+
+        데이터 수정
+
+            수정할 때도 마찬가지로 불변성을 지켜줘야 한다.
+            기존의 배열과, 그리고 그 내부에 있는 객체를 절대로 직접적으로 수정해서는 안된다.
+
+            
 
 Context API
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 class PhoneForm extends Component {
+    // state 는 컴포넌트 내부에서 선언하며 내부에서 값을 변경 할 수 있습니다. (동적인 데이터 다룸)
     state = {
         name: '',
         phone: ''
@@ -45,7 +46,6 @@ class PhoneForm extends Component {
                   name="phone"
                 />
                 <button type="submit">등록</button>
-                <div>{this.state.name} {this.state.phone}</div>
             </form>
         );
     }
