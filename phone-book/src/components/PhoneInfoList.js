@@ -8,7 +8,16 @@ class PhoneInfoList extends Component {
         onUpdate: () => console.warn('onUpdate not defined'),
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // 다음에 받아올 데이터가 현재 데이터랑 다른 배열일 때 true로 설정.
+        return nextProps.data !== this.props.data;
+    }
+
     render() {
+        // App 컴포넌트의 상태가 업데이트 되면 리렌더링 발생하고, 리렌더링 되면
+        // 자식 컴포넌트 또한 리렌더링 된다.
+        console.log('render PhoneInfoList');
+
         // 할당하려는 변수가 undefined 일 때에는 비구조화 할당을 통해 내부의 값을
         // 받아올 수 없기 때문에 defaultProps 를 통하여 기본값을 설정해주어야 한다.
         const { data, onRemove, onUpdate } = this.props;

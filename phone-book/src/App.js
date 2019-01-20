@@ -18,7 +18,16 @@ class App extends Component {
         name: 'linc',
         phone: '010-0000-0001'
       }
-    ]
+    ],
+    // 키워드 값에 따라 하위 컴포넌트인 PhoneInfoList가 전달받는 data가 달라진다.
+    // 키워드 값이 바뀌면 PhoneInfoList의 shouldComponentUpdate 도 true를 반환할 것이다.
+    keyword: ''
+  }
+  // input 실시간 감지, setState로 state에 이벤트 값 할당
+  handleChange = (e) => {
+    this.setState({
+      keyword: e.target.value,
+    });
   }
   handleCreate = (data) => {
     // setState 할 때 함수형으로 프로그래밍 하면 실행 큐에 적재되어 차례차례 실행된다.
@@ -48,14 +57,19 @@ class App extends Component {
           : info // 전달받은 id와 같지 않은 인덱스는 기존의 값을 그대로 유지한다.
       )
     })
-
   }
   // ReactDom 에 정의되어있는 render 함수.
   render() {
     // this가 App class를 가르키는 것으로 보아 render 함수는 함수표현식으로 정의되어있을 것이다.
     // console.log(this);
     
-    const { information } = this.state;
+    const { information, keyword } = this.state;
+
+    const filteredList = information.filter(
+      // information 배열을 필터링 하는 로직
+      info => info.name.indexOf(keyword) !== -1
+    );
+    
     return (
         <div>
           <p>
@@ -65,12 +79,20 @@ class App extends Component {
             // 자식에게 전달할 함수 onCreate
             onCreate={this.handleCreate}
           />
+          <p>
+            <input
+              placeholder="검색 할 이름을 입력하세요!"
+              onChange={this.handleChange}
+              value={keyword}
+            />
+          </p>
+          <hr />
           <h5>
            JSON을 String으로 변환하여 표시<hr />
            {JSON.stringify(information)}
           </h5>
           <PhoneInfoList
-            data={information}
+            data={filteredList}
             // 실수로 함수를 전달하지 않았을 경우 app crash 발생한다.
             // 하위 컴포넌트에 아래 함수가 전달되지 않았을 경우를 대비하여
             // 하위 컴포넌트에서 해당 props를 위한 defaultProps 도 설정해야 한다.
