@@ -819,7 +819,25 @@ Computed Property Names
             수정할 때도 마찬가지로 불변성을 지켜줘야 한다.
             기존의 배열과, 그리고 그 내부에 있는 객체를 절대로 직접적으로 수정해서는 안된다.
 
-            
+            ex) 
+
+                const array = [
+                    { id: 0, text: 'hello', tag: 'a' },
+                    { id: 1, text: 'world', tag: 'b' },
+                    { id: 2, text: 'bye', tag: 'c'}
+                ];
+
+                기존의 값을 건드리지 않고 id가 1인 객체의 text 값을 'Korea' 라는 값으로
+                바꾼 새로운 배열을 만들어보자.
+
+                const modifiedArray = array.map(item => item.id === 1 
+                ? ({ ...item,. text: 'Korea' })
+                : item
+
+                id가 일치하면 새 객체를 만들고, 기존의 내용을 집어넣고 원하는 값 덮어쓰기
+                바꿀 필요 없는 것들은 그냥 기존값 사용한다.
+
+                
 
 Context API
 

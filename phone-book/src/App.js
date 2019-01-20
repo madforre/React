@@ -37,6 +37,19 @@ class App extends Component {
       information: information.filter(info => info.id !== id)
     })
   }
+  handleUpdate = (id, data) => {
+    // 일단 현재 state를 객체 비구조화 할당.
+    const { information } = this.state;
+    // 그 후 전달받은 파라미터를 이용하여 setState로 state 변경.
+    this.setState({
+      information: information.map(
+        info => id === info.id
+          ? { ...info, ...data } // 새 객체를 만들어서 기존의 값과 전달받은 data 를 덮어쓴다.
+          : info // 전달받은 id와 같지 않은 인덱스는 기존의 값을 그대로 유지한다.
+      )
+    })
+
+  }
   // ReactDom 에 정의되어있는 render 함수.
   render() {
     // this가 App class를 가르키는 것으로 보아 render 함수는 함수표현식으로 정의되어있을 것이다.
@@ -62,6 +75,7 @@ class App extends Component {
             // 하위 컴포넌트에 아래 함수가 전달되지 않았을 경우를 대비하여
             // 하위 컴포넌트에서 해당 props를 위한 defaultProps 도 설정해야 한다.
             onRemove={this.handleRemove}
+            onUpdate={this.handleUpdate}
             />
         </div>
     );

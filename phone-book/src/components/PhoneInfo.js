@@ -9,6 +9,17 @@ class PhoneInfo extends Component {
             id: 0
         },
         onRemove: () => console.warn('onRemove not defined ! 안녕 난 앱 크래쉬 방지용 에러'),
+        onUpdate: () => console.warn('onUpdate not defined ! 안녕 난 앱 크래쉬 방지용 에러'),
+    }
+
+    state = {
+        // 수정 버튼을 눌렀을 떄 editing 값을 true로 설정해준다.
+        // 이 값이 true 일 때에는, 기존에 텍스트 형태로 보여주던 값들을
+        // input 형태로 보여주게 된다.
+        editing: false,
+        // input 의 값은 유동적이다. input 값을 담기 위해서 각 필드를 위한 값도 설정한다.
+        name: '',
+        phone: '',
     }
 
     handleRemove = () => {
@@ -21,17 +32,93 @@ class PhoneInfo extends Component {
         onRemove(info.id);
     }
 
+    // editing 값을 반전시키는 함수이다.
+    // true -> false, false -> true
+    handleToggleEdit = () => {
+        // 객체 비구조화 할당. editing 만.
+        const { editing } = this.state;
+        this.setState({ editing: !editing });
+    }
+
+    // input 에서 onChange 이벤트가 발생 될 때
+    // 호출되는 함수입니다.
+    handleChange= (e) => {
+        const { name, value } = e.target;
+        this.setState({
+            [name]: value
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // 여기서는, editing 값이 바뀔 때 처리할 로직이 적혀있다.
+        // 수정을 눌렀을 땐, 기존의 값이 input에 나타나고,
+        // 수정을 적용할 땐, input 의 값들을 부모한테 전달해준다.
+
+        const { info, onUpdate } = this.props;
+        if(!prevState.editing && this.state.editing) {
+            // editing 값이 false -> true 로 전환될 때
+            // info의 값을 state에 넣어준다.
+            this.setState({
+                name: info.name,
+                phone: info.phone
+            })
+        }
+
+        if (prevState.editing && !this.state.editing) {
+            // editing 값이 true -> false 로 전환 될 때
+            onUpdate(info.id, {
+                name: this.state.name,
+                phone: this.state.phone
+            });
+        }
+    }
+
     render() {
         const style = {
             border: '1px solid black',
             padding: '8px',
             margin: '8px'
         };
-        // info 라는 객체를 props 로 받아와서 렌더링
-        // 실수로 info 값을 전달하지 않았다면 컴포넌트가 크래쉬 될 것이다.
-        // 왜? info가 undefined 일 때에는 비구조화 할당을 통해 내부의 값을
-        // 받아올 수 없기 때문이다.
-        // 그렇기 때문에 defaultProps 를 통하여 info의 기본값을 설정해주었다.
+
+        // 수정 모드
+
+        const { editing } = this.state;
+
+        if (editing) { // 수정모드
+            return (
+                <div style={style}>
+                    <div>
+                        <input
+                            value={this.state.name}
+                            name="name"
+                            placeholder="이름"
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div>
+                        <input
+                            value={this.state.phone}
+                            name="phone"
+                            placeholder="전화번호"
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <button onClick={this.handleToggleEdit}>적용</button>
+                    <button onClick={this.handleRemove}>삭제</button>
+                </div>
+            )
+        }
+        
+        // 일반 모드
+
+        /* 
+         * info 라는 객체를 props 로 받아와서 렌더링
+         * 실수로 info 값을 전달하지 않았다면 컴포넌트가 크래쉬 될 것이다.
+         * 왜? info가 undefined 일 때에는 비구조화 할당을 통해 내부의 값을
+         * 받아올 수 없기 때문이다.
+         * 그렇기 때문에 defaultProps 를 통하여 info의 기본값을 설정해주었다. 
+         */
+
         const {
             name, phone, id
         } = this.props.info;
@@ -43,6 +130,7 @@ class PhoneInfo extends Component {
                     <div><b>{name}</b></div>
                     <div>{phone}</div>
                     <div>{id}</div>
+                    <button onClick={this.handleToggleEdit}>수정</button>
                     <button onClick={this.handleRemove}>삭제</button>
                 </div>
             </React.Fragment>
