@@ -67,6 +67,7 @@ class App extends Component {
 
     const filteredList = information.filter(
       // information 배열을 필터링 하는 로직
+      // filter 함수는 callback이 true로 강제하는 값을 반환하는 모든 값이 있는 새로운 배열을 생성한다.
       info => info.name.indexOf(keyword) !== -1
     );
     

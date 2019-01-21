@@ -889,12 +889,43 @@ Computed Property Names
 
     자바스크립트 indexOf()
     
-    "문자열 또는 배열".indexOf("찾을 값","검색을 시작할 색인")
+        "문자열 또는 배열".indexOf("찾을 값","검색을 시작할 색인")
 
-    문자열 또는 배열에서 찾을 수 있는 첫 번째 인덱스를 반환하고
-    존재하지 않으면 -1을 반환한다. 
+        문자열 또는 배열에서 찾을 수 있는 첫 번째 인덱스를 반환하고
+        존재하지 않으면 -1을 반환한다.
+
+    자바스크립트 filter()
+    Array.prototype.filter()
+
+        filter 함수는 callback이 true로 강제하는 값을 반환하는 모든 값이 있는 새로운 배열을 생성한다.
+
+    최적화
+
+        새 데이터가 나타났을 때는 사실상 맨 마지막 데이터만 새로 랜더링해주면 된다.
+        실제로 바뀌지 않는 컴포넌트들은 DOM 변화가 일어나지는 않겠지만,
+        Virtual DOM 에 그리는 자원도 아껴주기 위해서 우리는
+        ShouldComponentUpdate 를 통하여 최적화 해줄 수 있다.
+
+리액트 요약
+
+    1. 재사용 가능한 컴포넌트를 만든다.
+    2. props 는 부모에게서 전달받는 값이다.
+    3. state 는 자기 자신이 지니고 있는 데이터이다.
+    4. props 나 state 가 바뀌면 컴포넌트는 리렌더링 한다.
+    5. LifeCycle API를 통해서 컴포넌트 마운트, 업데이트, 언마운트 전후로 처리 할 로직을
+       설정하거나 리렌더링을 막아줄 수 있다.
+
+KJY 프레임워크 이해를 위한 심화 학습 필요한 부분
 
 
+    * 스타일링 - Sass Scss
+    * 상태 관리 - Context API
+    * 불변성 유지 - 라이브러리(Immutable.js, Immer) 에 의존하지 않고 실력 향상을 위해 직접 구현할 것
+    * 라우팅 - react-router
+    ? 테스팅 - Jest, Enzyme - 테스팅까지는 아직 학습할 단계가 아닌 듯
+    ? 타입 시스템 - TypeScript - 사용 안함
+    * 토이 프로젝트 진행    
+    
 Context API
 
     const Context = createContext(); // Context 를 만듭니다.
