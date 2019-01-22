@@ -1,0 +1,22 @@
+.colorStyle {
+    float : left;
+    width : 25px;
+    height : 25px;
+    margin : 3px;
+    opacity : 0.5;
+}
+
+.colorContainer {
+    width : 140px;
+    margin : 0 auto;
+}
+
+.colorStyle:hover{
+    opacity: 0.75;
+    cursor: pointer;
+}
+
+.colorStyle.active {
+    opacity: 1;
+}
+

@@ -15,6 +15,12 @@
     color: white;
 }
 
+.color-wrapper {
+    padding : 1rem;
+    background: rgba(237, 245, 233, 0.507);
+    min-height: 2rem;
+}
+
 .form-wrapper {
     padding: 1rem;
     border-bottom: 1px solid #20c997;

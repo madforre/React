@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TodoListTemplate from './components/TodoListTemplate';
 import Form from './components/Form';
 import TodoItemList from './components/TodoItemList';
+import Palette from './components/Palette'
 
 class App extends Component {
 // 초기 state 정의
@@ -14,7 +15,10 @@ class App extends Component {
       { id: 0, text: ' React', checked: false },
       { id: 1, text: ' Laravel', checked: true },
       { id: 2, text: ' Nginx', checked: false }
-    ]
+    ],
+    colors: ['#343a40', '#f03e3e', '#12b886', '#228ae6'],
+    colorSelected: [],
+    colorActive: [true, false, false, false]
   }
 
   // 텍스트 내용이 바뀌면 state 업데이트
@@ -96,7 +100,7 @@ class App extends Component {
   }
 
   render() {
-    const { input , todos } = this.state;
+    const { input , todos , colors , colorSelected , colorActive } = this.state;
     
     // 사용하기 더 편하게 객체 비구조화 할당하여 아예 this도 안쓰게끔 해줌
     const {
@@ -108,16 +112,30 @@ class App extends Component {
     } = this;
     
     return (
-      <TodoListTemplate form={
-        <Form 
+      <TodoListTemplate 
+        form={
+        <Form
           value={input}
           onKeyPress={handleKeyPress}
           onChange={handleChange}
           onCreate={handleCreate}
         />
-      }>
+        }
+        
+        palette={
+        <Palette
+          colors={colors}
+          // selected={colorSelected}
+          // active={colorActive}
+        />
+        }
+        >
         {/* TodoItemList 는 children에 해당된다. */}
-        <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handleRemove}/>
+        <TodoItemList 
+          todos={todos} 
+          onToggle={handleToggle} 
+          onRemove={handleRemove}
+          />
       </TodoListTemplate>
     );
   }

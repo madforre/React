@@ -1017,7 +1017,13 @@ Array.prototype.findIndex()
             return this.props.todos !== nextProps.todos;
         }
 
-    
+동적인 스타일을 줄 때는, style={} 를 사용하면 된다.
+
+    예: <div style={{ background: color }}/>
+
+        객체를 전달하는 것이기 때문에 {{}} 로 해주어야 한다.
+
+한 컴포넌트 파일에는 두개의 컴포넌트를 선언할 수도 있다.
 
 Context API
 
