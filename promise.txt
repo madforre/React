@@ -64,6 +64,6 @@ Rejected(실패)
 
 에러 처리
 
-    then 의 두번째 사용 or .catch() 사용
+    then 의 두번째 파라미터에 사용 or .catch() 사용
     
     .catch 가 더 많은 에러를 잡아주므로 .catch()를 쓰도록 하자.

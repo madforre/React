@@ -16,7 +16,7 @@ ES6 클래스 와 리액트 간의 문제점
 
 HOC (Higher Order Component)
 
-    직접 state를 관리하는 대신, prop을 통해 마우스 위치를 전달받는다.
+    직접 state를 관리하는 대신, prop을 통해 전달받는다.
     단순히 컴포넌트를 감싸면 prop를 사용 할 수 있게 된다!
 
     HOC 로 전환해서 얻는 이점?
@@ -95,3 +95,38 @@ render props
 
     The term “render prop” refers to a technique for sharing code between React components 
     using a prop whose value is a function.
+
+    Example of using a render prop:
+
+    render(){
+      <FetchData render={(data) => {
+        return <p>{data}</p>
+      }} />
+    }
+
+Higher-order Components
+
+    Example of higher-order component:
+
+        function withExample(Component) {
+            return function(props) {
+                // cross cutting logic added here
+                return <Component {...props} />;
+            };
+        }
+캡슐화하여 전달하는 방법
+
+    - render method 안에 component를 넣어 랜더링
+    - 동적으로 rendering 할 수 있도록 해주는 함수형 prop을 제공
+
+ Render Prop?
+
+    정리하자면, render prop은 무엇을 render할지 component에게 알려주는 함수 입니다.
+    이 테크닉은 행위(마우스 트래킹 같은)를 매우 쉽게 공유할 수 있도록 만들어 줍니다. 해당 행위를 적용하려면, <Mouse> 를 그리고 현재 (x, y) 커서위치에 무엇을 그릴지에 대한 정보를 prop을 통해 넘겨주기만 하면 됩니다.
+
+    이해하기 위한 중요한 개념은 {this.props.render(this.state)} 를 렌더함수에 사용한 컴포넌트가
+    (render prop을 통해) 자신의 상태를 필수적으로 <App> 컴포넌트에게 노출한다는 점이다.
+    그러므로 <App>은 그 상태를 이용해 원하는 무엇이든 렌더링할 수 있다. 멋지지 않은가. 😎
+
+    동적으로 렌더링 할 수 있도록 해주는 함수형 prop!!!!!
+    자신의 상태를 상위 컴포넌트에게 노출!!!
