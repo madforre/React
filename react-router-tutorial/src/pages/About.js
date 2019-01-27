@@ -5,7 +5,7 @@ import queryString from 'query-string';
 // URL query 사용 시에는 location props로 전달받음. (query-string 라이브러리 사용)
 const About = ({location, match}) => {
     const query = queryString.parse(location.search)
-    // console.log(query);
+    // console.log(query);3
     const detail = query.detail === 'true';
     return (
         <div>
