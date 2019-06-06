@@ -71,6 +71,9 @@
                 });
             }
 
+            // c는 dom element? 
+            onRefInput = (c) => { this.answerInput = c; };
+
             // 컨텐츠
             render() {
                 console.log("렌더링")
@@ -78,7 +81,7 @@
                     <React.Fragment>
                         <p>{this.state.first} x {this.state.second} = ?</p>
                         <form onSubmit={this.onSubmit}>
-                            <input ref={(dom_element) => { this.answerInput = dom_element }} type="number" value={this.state.value} onChange={(e) => this.onChange('인풋 변경 감지', e)} disabled={this.state.correct} />
+                            <input ref={this.onRefInput} type="number" value={this.state.value} onChange={(e) => this.onChange('인풋 변경 감지', e)} disabled={this.state.correct} />
                             <button>답안 제출</button>
                         </form>
                         <p>{this.state.result}</p>
