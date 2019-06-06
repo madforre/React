@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>구구단</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.4.5/babel.min.js"></script>     
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const random = () => {
+            return Math.ceil(Math.random( ) * 9);
+        }
+
+        class GuGuDan extends React.Component {
+            state = { // 컨스트럭터 없애고 이렇게 써두됨.
+                first: random(),
+                second: random(),
+                value: '',
+                result: '',
+                // correct: false,
+                prevQuestion: ''
+            };
+
+            onSubmit = (e) => {
+                e.preventDefault();
+                if (parseInt(this.state.value) === this.state.first * this.state.second) {
+                    this.setState({
+                        value: '',
+                        result: `${this.state.first * this.state.second} 정답!`,
+                        // correct: true
+                    });
+                    this.answerInput.focus();
+                } else {
+                    this.setState({
+                        value: '',
+                        result: '땡',
+                    });
+                    this.answerInput.focus();
+                }
+            }
+
+            // onChange = function (words, e) { // 이제 이렇게 써도 되나봄 옛날엔 안됐대.
+            //     console.log(this);
+            //     console.log(words);
+            //     this.setState({ value: e.target.value });
+            // };
+
+            onChange = (words, e) => { // 멋지고 심플하게 요렇게 쓰자구! 함수 선언식은 ㄴㄴ
+                // console.log(this);
+                // console.log(words);
+                this.setState({value: e.target.value});
+            };
+
+            nextQuestion = () => {
+                // 리액트 진영에서는 setState시 이전 상태와
+                // 좀더 구분하기 쉽게 해주는 내장 API 제공함.
+                this.setState((prevState) => {
+                    return {
+                      first: random(),
+                      second: random(),
+                      value: '',
+                      result: '',
+                      correct: false,
+                      prevQuestion: `${prevState.first} x ${prevState.second} = ${prevState.first * prevState.second}`
+                    };
+                });
+            }
+
+            // 컨텐츠
+            render() {
+                console.log("렌더링")
+                return (
+                    <React.Fragment>
+                        <p>{this.state.first} x {this.state.second} = ?</p>
+                        <form onSubmit={this.onSubmit}>
+                            <input ref={(dom_element) => { this.answerInput = dom_element }} type="number" value={this.state.value} onChange={(e) => this.onChange('인풋 변경 감지', e)} disabled={this.state.correct} />
+                            <button>답안 제출</button>
+                        </form>
+                        <p>{this.state.result}</p>
+                        <hr />
+                        <button onClick={this.nextQuestion}>문제 변경</button>
+                        <p>이전 문제 : {this.state.prevQuestion}</p>
+                        <hr />
+                    </React.Fragment>
+                );
+            }
+        }
+    </script>
+    <script type="text/babel">
+        ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+    </script>
+</body>
+</html>
