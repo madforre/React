@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Template</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.4.5/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const Template = () => {
+            // Hooks로 stats를 선언하는 방법. (꼭) 함수형 컴포넌트안에 이렇게 넣어주어 선언한다.
+            // 첫번째께 state, 두번째께 setState. 비구조화 할당 문법!! 와우..
+            const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
+            const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
+            const [value, setValue] = React.useState('');
+            const [result, setResult] = React.useState('');
+
+            // Ref도 사용방법이 좀 바뀌었음. 초기값 넣어도 됨.
+            const inputRef = React.useRef(null);
+
+            // 클래스가 없어서 클래스 메서드는 못쓰지만 대신 함수를 만들면 됨.
+            const onChangeInput = (e) => {
+                // setState가 없어지고 각각 state별로 쪼개졌다!! setValue 사용!
+                setValue(e.target.value);
+            };
+
+            const onSubmitForm = (e) => {
+                e.preventDefault();
+                if (parseInt(value) === first * second) {
+                    setValue('');
+                    setResult(`${this.state.first * this.state.second} 정답!`);
+                    setFirst(Math.ceil(Math.random() * 9));
+                    setSecond(Math.ceil(Math.random() * 9));
+                    // 쪼끔 다름. 쓸 때는 current 가운데 낑겨줘야함.
+                    inputRef.current.focus();
+                } else {
+                    setValue('');
+                    setResult('틀렸지롱');
+                    inputRef.current.focus();
+                }
+            };
+
+            return (
+                <React.Fragment>
+                    <div>{first} 곱하기 {second}는?</div>
+                    <form onSubmit={}>
+                        <input ref={} onChange={e} value={value}/>
+                        <button>입력!</button>
+                    </form>
+                    <div id="result">{result}</div>
+                </React.Fragment>
+            );
+        }
+    </script>
+    <script type="text/babel">
+        ReactDOM.render( <Template/>, document.querySelector('#root'));
+    </script>
+</body>
+</html>

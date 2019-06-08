@@ -31,7 +31,7 @@
                 if (parseInt(this.state.value) === this.state.first * this.state.second) {
                     this.setState({
                         value: '',
-                        result: `${this.state.first * this.state.second} 정답!`,
+                        result: ` 정답! ${this.state.first * this.state.second}`,
                         // correct: true
                     });
                     this.answerInput.focus();
@@ -70,21 +70,27 @@
                     };
                 });
             }
-
+            
             // c는 dom element? 
             onRefInput = (c) => { this.answerInput = c; };
+
+            componentDidUpdate() {
+                console.log(this.answerInput);
+                console.log(this);
+                this.hou = 'c';
+                console.log(this.hou);
+            }
 
             // 컨텐츠
             render() {
                 console.log("렌더링")
                 return (
                     <React.Fragment>
-                        <p>{this.state.first} x {this.state.second} = ?</p>
+                        <p>{this.state.first} x {this.state.second} = ? {this.state.result}</p>
                         <form onSubmit={this.onSubmit}>
                             <input ref={this.onRefInput} type="number" value={this.state.value} onChange={(e) => this.onChange('인풋 변경 감지', e)} disabled={this.state.correct} />
                             <button>답안 제출</button>
                         </form>
-                        <p>{this.state.result}</p>
                         <hr />
                         <button onClick={this.nextQuestion}>문제 변경</button>
                         <p>이전 문제 : {this.state.prevQuestion}</p>
