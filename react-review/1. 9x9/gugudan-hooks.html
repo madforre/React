@@ -21,7 +21,7 @@
             const [result, setResult] = React.useState('');
 
             // Ref도 사용방법이 좀 바뀌었음. 초기값 넣어도 됨.
-            const inputRef = React.useRef(null);
+            const inputRef = React.useRef('initial value');
 
             // 클래스가 없어서 클래스 메서드는 못쓰지만 대신 함수를 만들면 됨.
             const onChangeInput = (e) => {
@@ -33,10 +33,11 @@
                 e.preventDefault();
                 if (parseInt(value) === first * second) {
                     setValue('');
-                    setResult(`${this.state.first * this.state.second} 정답!`);
+                    setResult(`${first * second} 정답!`);
                     setFirst(Math.ceil(Math.random() * 9));
                     setSecond(Math.ceil(Math.random() * 9));
                     // 쪼끔 다름. 쓸 때는 current 가운데 낑겨줘야함.
+                    // 콘솔찍어보니깐 current안에 저장하더라구.
                     inputRef.current.focus();
                 } else {
                     setValue('');
@@ -47,9 +48,10 @@
 
             return (
                 <React.Fragment>
+                    {console.log('렌더링', inputRef)}
                     <div>{first} 곱하기 {second}는?</div>
-                    <form onSubmit={}>
-                        <input ref={} onChange={e} value={value}/>
+                    <form onSubmit={onSubmitForm}>
+                        <input ref={inputRef} onChange={onChangeInput} value={value}/>
                         <button>입력!</button>
                     </form>
                     <div id="result">{result}</div>

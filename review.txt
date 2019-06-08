@@ -219,3 +219,55 @@ Hooks
         console.log(a, b)
         // output: 10 20
 
+Hooks 단점을 굳이 꼽자면?
+
+    랜더링 시에 함수들이 다시 불필요하게 실행된다.
+    함수 부분 자체가 state 바뀔때마다 통째로 재실행된다.
+
+    클래스 컴포넌트에서는 렌더함수만 재실행됨.
+
+    이건 아직까지는 어쩔 수 없나봄ㅎ..
+
+리액트는 id는 쓸 수 있는데 class는 못씀!!
+
+    엔진이 html의 속성 class가 자바스크립트에서의 class랑 헷갈려 하기 때문에
+    class 대신 className을 써주어야 함.
+
+    마찬가지로 라벨의 for는 반복문의 for와 헷갈리므로 htmlFor 로 바꿔주어야 함.
+
+Hooks 에서 state를 객체형태로 하나로 묶으면 안되나요??
+    
+    되긴 하는데 엄청 귀찮아짐.
+    setState 에서 일부롤 누락시키면 에러난다.
+    모든 state를 전부 적어줘야 함...
+
+    this.setState 처럼 클래스형 컴포넌트에서 쓰던 것과는 다르게
+    일일히 전부 바꾸어 주어야 합니다.. 엄청 귀찮겠죠? ㅎ
+
+    Hooks 쓸 때는 state를 전부 쪼개서 써줍시다.
+
+this.setState setSomething에 함수 집어넣는 경우는 어떨때 사용하는가?
+
+    옛날 state(prevState) 활용할 때 사용 한다.
+
+    ex) 함수형 컴포넌트 안이라고 가정.
+        
+        const [value, setValue] = React.useState(3)
+
+        setResult((prevValue) => {
+            return '상태 바뀌기 전 값' + prevValue;
+        }
+
+Hooks에서 setSomething을 각각 따로 총 n번씩 써주면 렌더링이 n번 일어나지 않나요??
+
+    아니다. 한번 일어난다. 왜냐?
+    리액트에서 setState는 비동기이기 때문이다.
+    한번에 묶어서 처리하므로 각각 따로 setValue를 해줘도 문제 없음.
+
+    모든 것에는 이유가 있다.
+    비동기인 this.setState 로 작업하는데 개별 할당이 복잡해서
+    Hooks 출현함. 개별로 setState 할당 가능해짐.
+
+    불편함을 개선시키려는 리액트 진영의 꾸준한 노력. 공식문서에도 나와있는데
+    사람들이 잘 안읽는다고 한다.
+

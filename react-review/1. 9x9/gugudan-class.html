@@ -22,7 +22,6 @@
                 second: random(),
                 value: '',
                 result: '',
-                // correct: false,
                 prevQuestion: ''
             };
 
@@ -31,14 +30,13 @@
                 if (parseInt(this.state.value) === this.state.first * this.state.second) {
                     this.setState({
                         value: '',
-                        result: ` 정답! ${this.state.first * this.state.second}`,
-                        // correct: true
+                        result: ` 정답! ${this.state.first * this.state.second}`
                     });
                     this.answerInput.focus();
                 } else {
                     this.setState({
                         value: '',
-                        result: '땡',
+                        result: '땡'
                     });
                     this.answerInput.focus();
                 }
