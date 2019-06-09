@@ -1,6 +1,14 @@
 const React = require('react');
 const { useState, useRef } = React;
 
+
+// 렌더링 카운트 컴포넌트를 순수함수느낌처럼 빼서 만들어보았다.
+let n = 1;
+const RenderCount = ({count}) => { // 전달받은 props를 구조분해하여 할당한다.
+    console.log(`${count}번째 랜더링`)
+    return <div>랜더링 횟수 : {count}</div>
+}
+
 const WordChainHooks = () => {
 
     const [word, setWord] = useState('첫단어');
@@ -41,7 +49,7 @@ const WordChainHooks = () => {
             let words = e.currentTarget.value;
             let tips;
             
-            // 문자가 4글자 이상인 경우 삭제할꺼임. 그리고 2글자~3글자만 입력하도록 경고문 띄울꺼임
+            // 문자가 4글자 넘어가는 경우 삭제할꺼임. 그리고 2글자~3글자만 입력하도록 경고문 띄울꺼임
             if (words.length >= 4) {
                 words = words.slice(0, 3)
                 tips = '3글자가 최대임'
@@ -54,6 +62,7 @@ const WordChainHooks = () => {
 
     return (
         <> 
+            <RenderCount count={n++}/>
             <p>{word}</p>
             <form onSubmit={onSubmitForm}>
                 <input ref={answerRef} type="text" onChange={onChangeInput} value={value} />
