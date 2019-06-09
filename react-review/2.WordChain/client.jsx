@@ -8,7 +8,7 @@ const WordChainClass = require('./WordChainClass');
 
 
 // 핫로더 사용 안할 때.
-// ReactDom.render(<WordRelay />, document.querySelector('#root'));
+// ReactDom.render(<WordChain />, document.querySelector('#root'));
 
 // 핫로더 사용할 때
 const { hot } = require('react-hot-loader/root');
