@@ -1,15 +1,5 @@
 const React = require('react');
-const { useState, useRef, PureComponent } = React;
-
-
-const RenderCount = () => {
-    return () => {
-        let n = n || 0;
-        n++;
-        console.log('랜더링 횟수 : ', n)
-    }
-}
-
+const { useState, useRef } = React;
 
 const WordChainHooks = () => {
 
@@ -51,8 +41,8 @@ const WordChainHooks = () => {
             let words = e.currentTarget.value;
             let tips;
             
-            // 문자가 4글자 넘어가는 경우 삭제할꺼임. 그리고 2글자~3글자만 입력하도록 경고문 띄울꺼임
-            if (words.length > 4) {
+            // 문자가 4글자 이상인 경우 삭제할꺼임. 그리고 2글자~3글자만 입력하도록 경고문 띄울꺼임
+            if (words.length >= 4) {
                 words = words.slice(0, 3)
                 tips = '3글자가 최대임'
             } else if (words.length < 2) {
@@ -64,7 +54,6 @@ const WordChainHooks = () => {
 
     return (
         <> 
-            <RenderCount />
             <p>{word}</p>
             <form onSubmit={onSubmitForm}>
                 <input ref={answerRef} type="text" onChange={onChangeInput} value={value} />
