@@ -5,16 +5,17 @@ module.exports = {
     mode: 'development', // 실서비스에선 production 으로 교체
     devtool: 'eval', // 개발단계 빠른 설정
     resolve: {
-        extensions: ['.js', '.jsx']
+        extensions: ['.js', '.jsx'] // 엔트리에서 파일 찾을 때 
+        // resolve에 명시한 확장자들로 찾아줌
     },
 
     entry: { // 입력
-        app: ['./client.jsx'], // app은 키임. 설정한 키대로 결과물이 나온다.
+        app: ['./client'], // app은 키임. 설정한 키대로 결과물이 나온다.
     },
 
     module: {
         rules: [{
-            test: /\.jsx?/, // js랑 jsx 파일에
+            test: /\.jsx?/, // 정규표현식. js랑 jsx 파일에
             loader: 'babel-loader', // 바벨 로더를 적용한다.
             options: {
                 presets: ['@babel/preset-env', '@babel/preset-react'], // 바벨의 옵션들을 여기에 넣어준다.
