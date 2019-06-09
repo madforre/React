@@ -4,7 +4,7 @@ const ReactDom = require('react-dom');
 
 // 필요한 컴포넌트만 쏙쏙 가져오기 때문에 엄청 효율적임!
 // 모듈 시스텡미 생기면서 레고처럼 끼워맞추는 작업이 가능해짐.
-const WordRelayClass = require('./WordRelayClass');
+const WordChainClass = require('./WordChainClass');
 
 
 // 핫로더 사용 안할 때.
@@ -13,5 +13,5 @@ const WordRelayClass = require('./WordRelayClass');
 // 핫로더 사용할 때
 const { hot } = require('react-hot-loader/root');
 
-const Hot = hot(WordRelayClass);
+const Hot = hot(WordChainClass);
 ReactDom.render(<Hot />, document.querySelector('#root'));

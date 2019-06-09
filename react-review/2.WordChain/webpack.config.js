@@ -1,7 +1,7 @@
 const path = require('path'); // 노드에서 경로 조작하기 쉽게 해주는 모듈임.
 
 module.exports = {
-    name: 'wordrelay-setting',
+    name: 'wordchain-setting',
     mode: 'development', // 실서비스에선 production 으로 교체
     devtool: 'eval', // 개발단계 빠른 설정
     resolve: {
