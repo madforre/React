@@ -2,16 +2,20 @@
 const React = require('react');
 const ReactDom = require('react-dom');
 
-// 필요한 컴포넌트만 쏙쏙 가져오기 때문에 엄청 효율적임!
-// 모듈 시스텡미 생기면서 레고처럼 끼워맞추는 작업이 가능해짐.
-const WordChainClass = require('./WordChainClass');
+// 함수형 컴포넌트 Hooks 사용 O
+const WordChainHooks = require('./WordChainHooks'); // const Hot = hot(WordChainClass);
 
 
-// 핫로더 사용 안할 때.
-// ReactDom.render(<WordChain />, document.querySelector('#root'));
-
-// 핫로더 사용할 때
+// 핫로더 사용 O
 const { hot } = require('react-hot-loader/root');
+const Hot = hot(WordChainHooks); // const WordChainClass = require('./WordChainClass');
 
-const Hot = hot(WordChainClass);
-ReactDom.render(<Hot />, document.querySelector('#root'));
+
+// 핫로더 사용 O
+ReactDom.render(<Hot />, document.querySelector('#root')); // ReactDom.render(<WordChain />, document.querySelector('#root'));
+
+
+
+
+
+

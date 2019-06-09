@@ -16,46 +16,40 @@ class WordChainClass extends Component {
 
     onSubmitForm = (e) => {
         e.preventDefault()
+        this.answer_input.focus()
 
         // 2-3글자 아니면 함수 종료
         let re = /[가-힣]{3}/
         if (this.state.value.length === 2) re = /[가-힣]{2}/
 
-        if (!re.test(this.state.value)) { 
-            this.setState({ message: '2-3글자의 완성된 단어를 입력하세요.' })
-            this.answer_input.focus()
+        if (!re.test(this.state.value)) {
+            // 4개인 상태로 submit 했을 때 3글자로 잘라줌
+            const words = this.state.value.slice(0, 3);
+            // 경고 메세지 띄움
+            this.setState({ message: '2-3글자의 완성된 단어를 입력하세요.', value: words })
             return
         }
 
         // 제시한 문제의 마지막 글자와 내가 입력한 첫글자 비교
         if (this.state.word[this.state.word.length - 1] === this.state.value[0]) {
-            this.setState({
-                value: '',
-                word: this.state.value,
-                message: '딩동댕'
-            })
+            this.setState({ value: '', word: this.state.value, message: '딩동댕' })
         } else {
-            this.setState({
-                value: '',
-                message: '땡'
-            })
+            this.setState({ value: '', message: '땡' })
         }
-        this.answer_input.focus()
     }
 
     onChangeInput = (e) => {
-        const words = e.currentTarget.value;
-        this.setState({value: words})
+        let words = e.currentTarget.value;
+        let tips;
         
         // 문자가 4글자 넘어가는 경우 삭제할꺼임. 그리고 2글자~3글자만 입력하도록 경고문 띄울꺼임
-        if (words.length == 4) {
-            const sliced_words = words.slice(0, -1)
-            this.setState({value: sliced_words, message: '3글자까지밖에 안댐'})
+        if (words.length > 4) {
+            words = words.slice(0, 3)
+            tips = '3글자가 최대임'
         } else if (words.length < 2) {
-            this.setState({message: '2글자 이상 입력하렴', value: words})
-        } else {
-            this.setState({message: '', value: words})
+            tips = '2글자 이상 입력하셈'
         }
+        this.setState({message: tips, value: words})
     }
 
     onRefInput = (el) => {
