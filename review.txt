@@ -725,6 +725,29 @@ module의 rules안에 있는 plugin들 말고 추가적으로 무언가를 하�
 
     https://github.com/browserslist/browserslist
 
+컴포넌트로 작업할 시 장점은?
 
+    필요한 컴포넌트만 쏙쏙 가져오기 때문에 엄청 효율적임!
+    모듈 시스템이 생기면서 레고처럼 끼워맞추는 작업이 가능해짐.
+
+로그도 알아두자.
+
+    HMR? Hot Module Reload
+    WDS? Webpack Dev Server
+
+리액트에서 htmlFor , className ?
+
+    HTML의 for 속성과 class 속성을 의미한다.
+    자바스크립트 문법과 겹쳐서 이렇게 표기한다.
+
+    그냥 for class 로 쓰면 안됨!
+
+핫로더 관련해서 숫자야구 만들 때에는 파일분리를 시도해보자..
+    
+    https://github.com/gaearon/react-hot-loader/issues/765
+
+    나중에 포탈로 추가 개발도 몇개 해보던지 하구
+
+ㅇ
 
 
