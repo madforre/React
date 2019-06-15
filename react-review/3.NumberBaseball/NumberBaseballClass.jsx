@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'; // PureComponent는 state가 바뀔 때만 렌더링을 한다.
+import React, { PureComponent, createRef } from 'react'; // PureComponent는 state가 바뀔 때만 렌더링을 한다.
 import Try from './TryClass';
 
 function getNumbers() { // 숫자 4개를 겹치지 않고 랜덤하게 뽑는 함수
@@ -87,18 +87,23 @@ class NumberBaseballClass extends PureComponent {
                 })
             }
         }
+        this.inputRef.current.focus(); // hooks랑 쓰는 법을 통일시켜줄 수 있음.
     };
 
     onChangeInput = (e) => {
         this.setState({value: e.target.value});
     };
 
+    // onInputRef = (el) => { this.input = el };
+    
+    inputRef = createRef(); // hooks처럼 쓰는 방법
+
     render() {
         return (
             <>
                 <h1>씬나는 숫자야구 ( 1 ~ 9 )</h1>
                 <form onSubmit={this.onSubmitForm}>
-                    <input maxLength={4} value={this.state.value} onChange={this.onChangeInput} />
+                    <input ref={this.inputRef} maxLength={4} value={this.state.value} onChange={this.onChangeInput} />
                     <button>제출</button>
                 </form>
                 <div>{this.state.result}</div>

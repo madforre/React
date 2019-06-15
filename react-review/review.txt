@@ -1054,3 +1054,110 @@ export default Try;
 
     props 잘게 쪼개서 자식한테 작은 단위로 물려주면 된다.
 
+클래스에서 Hooks 처럼 Ref를 쓰는 방법
+
+    createRef 사용하면 된다.
+
+    ex)
+        import React, { PureComponent, createRef } from 'react'; // PureComponent는 state가 바뀔 때만 렌더링을 한다.
+        // 이런식으로 불러와서
+
+        onSubmitForm = (e) => {
+            e.preventDefault();
+            this.inputRef.current.focus(); // hooks랑 쓰는 법을 통일시켜줄 수 있음.
+        }
+
+        inputRef = createRef(); // 요렇게 써주고
+
+        render() {
+            return (
+                <>
+                    <form>
+                        <input ref={this.inputRef} /> // 인풋에선 요렇게
+                    </form>
+                </>
+            )
+        }
+
+    이처럼 클래스 컴포넌트에서도 hooks 처럼 Ref를 써줄 수 있다.
+    그렇다면 예전 방식은 어떻게 쓰냐??
+
+    onInputRef 자체가 함수라서 다른 동작을 넣을 수 있다.
+    ref 설정할 때 자유도가 조금 더 있음.
+    미세하게 조정할 수 있다는 장점이 있음.
+        
+보통 함수 안에 다른 함수를 넣는 경우에는
+미세한 동작을 더 할 수 있는 자유도가 늘어난다.
+
+일급객체, 일급함수, HOC
+
+    자바스크립트는 20년 전부터 지원함.
+    어떻게 보면 대충만든 언어지만 어떻게 보면 미래까지 생각한 대~단한 언어임.
+
+    함수 안에 다른 함수를 넣는게 다른 언어에서 흔한게 아님.
+
+    자바도 지원한지 10년 됐음. 람다 들어오기 전까지는 어려웠던 부분임.
+
+랜더 함수안에서 setState하면 절대 안됨!!!
+
+     render -> setState -> render -> setState ... 무한반복 생긴다.
+
+     render 안에는 setState 쓰면 안된다!
+
+전달받은 props는 부모가 바꿔주어야 한다!!
+
+    자식이 바꾸면 절-대 안됨. 리액트에서는 원칙임.
+    
+    근데 실무에서는 그런 경우가 있음.
+    그럴 때에는 props 를 state에 넣어준다.
+
+constructor, super를 굳이 써주는 이유??
+    
+    함수 안에서 다른동작이 가능하다.
+    정밀한 컨트롤 또는 동작이 필요할 때
+    사용한다.
+
+    constructor 안에서 전달 받은 props를 
+    가공해서 state에 넣어주는 것도 가능함.
+
+
+    ex) 현재 constructor 내부라고 가정.
+
+    const filtered = this.props.filter(() => {
+    
+    });
+
+    this.state = {
+            result: filtered,
+            try: this.props.try,
+    };
+
+shouldComponentUpdate(nextProps, nextState, nextContext)
+
+    요기서 nextContext는 새로 추가됐음.
+
+    nectContext 는 ContextAPI 에서 사용함.
+
+ContextAPI
+
+    A -> B -> C -> D -> E -> F -> G
+
+    단계적으로 부모 자식을 타고 거치면 
+    랜더링될 위험이 높아짐. 불편하기도 하고.
+
+    ContextAPI는 A에서 G로 한번에 전달을 해줌.
+
+    Context 좀 응용한게 Redux.
+
+    props의 진화형이 Context 라고 보면 됩니다.
+
+Ref - 반응속도체크
+
+useEffect - 가위바위보
+
+
+리액트에서는 가독성을 저해하는 요인으로 for와 if를 못쓴다.
+
+    랜더 안에서 for, it 못씀.
+
+    반복문은 map 써주고, 
