@@ -1256,3 +1256,352 @@ JSX 에서는 배열안에 JSX들 담아서 리턴해주는게 가능하다!!
     여러태그들 묶어주고 싶을 때는 배열말고 그냥 껍데기 태그 
     <> </> 쓰자. Fragment 쓰자!!!!!
 
+
+랜더함수가 실행되면 리액트가 jsx를 돔에 딱 붙여준다.
+
+    리액트 라이프사이클을 사용하면 특정한 순간에 동작을 할 수 있음.
+
+    componentDidMount() {} 
+    
+        - 랜더링이 처음으로 성공적으로 실행되었다면 componentDidMount가 실행된다.
+        - 리랜더링이 일어났을 때에는 실행되지 않는다. 첫 렌더링이 성공적으로 실행되었을 때 실행.
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return true;
+    } 
+
+        - 어? true네? 리렌더링 해줘야됨! 
+        - 리렌더링 할지 결정
+
+    componentDidUpdate() {}
+
+        - 리렌더링 후 실행 / 보통 비동기 요청을 여기에다가 많이 씀. ex: setInterval
+
+    componentWillUnmount() {}
+
+        - 컴포넌트가 제거되기 직전에 실행 / 비동기 요청 정리를 많이 해요. ex: setInterval
+        - componentDidMount나 componentDidUpdate에서 뭔가 비동기 요청을 했는데
+            그게 남아있는 것을
+
+컴포넌트의 일생..
+
+    클래스의 경우라고 가정.
+
+        constructor -> render -> ref -> componentDidMount -> 
+        setState/props 바뀔 때 -> shouldComponentupdate -> render -> componentDidUpdate
+        -> 부모가 나를 없앴을 때 -> componentWillUnmount -> 소멸
+
+자바스크립트는 굉장히 자유로운 언어인거 같아요.
+
+    일반적인 객체지향 언어에서 생성자는 클래스의 소속이다. 
+    하지만 자바스크립트에서 객체를 만드는 주체는 함수다. 
+    함수에 new를 붙이는 것을 통해서 객체를 만들 수 있다는 점은 
+    자바스크립트에서 함수의 위상을 암시하는 단서이면서 
+    또 자바스크립트가 추구하는 자유로움을 보여주는 사례라고 할 수 있다.
+
+ES6 vs ES5 Class 문법 비교
+
+    ES6 (ES2015):
+
+        class Cat { 
+        constructor(name) {
+            this.name = name;
+        }
+        
+        speak() {
+            console.log(this.name + ' makes a noise.');
+        }
+        }
+
+        class Lion extends Cat {
+        speak() {
+            super.speak();
+            console.log(this.name + ' roars.');
+        }
+        }
+
+    ES5:
+
+        function Cat(name) {
+        this.name = name;
+        }
+
+        Cat.prototype.speak = function () {
+        console.log(this.name + ' makes a noise.');
+        };
+
+        function Lion(name) {
+        // `super()` 호출
+        Cat.call(this, name);
+        }
+
+        // `Cat` 클래스 상속
+        Lion.prototype = Object.create(Cat.prototype);
+        Lion.prototype.constructor = Lion;
+
+        // `speak()` 메서드 오버라이드
+        Lion.prototype.speak = function () {
+        Cat.prototype.speak.call(this);
+        console.log(this.name + ' roars.');
+        };
+
+
+
+객체지향 복습 ( 자바스크립트, 리액트를 떠나서 일반적인 개념 자바 기준. )
+
+    * 래퍼런스
+
+            https://enjoyplaying.tistory.com/32?category=702763
+            https://enjoyplaying.tistory.com/33?category=702763
+
+    추상이란?
+
+        여러가지 사물이나 개념에서 공통되는 특성이나 속성 따위를 추출하여 파악하는 작용.
+
+    추상화와 구체화
+
+        추상화 : 클래스간의 공통점을 찾아내서 공통의 조상을 만드는 작업.
+        구체화 : 상속을 통해 클래스를 구현, 확장하는 작업.
+
+    추상 클래스란?
+
+        - 추상 메서드를 포함하고 있는 클래스.
+        - 클래스를 설계도에 비교하자면 추상 클래스는 미완성의 설계도라고 볼 수 있다.
+        - 미완성의 설계도로 제품을 만들 수 없듯이, 추상 클래스로 인스턴스를 생성할 수 없다.
+          오직 상속을 통해서 자손 클래스에 의해서만 구체화 된다.
+
+    추상 클래스 표현 방법
+
+        보통 class 앞에 abstract라는 키워드를 붙이면 된다.
+
+            abstract class 클래스이름 {
+            }
+
+    추상 참고
+
+        - 추상 클래스는 추상 메서드를 포함하고 잇다는 것을 제외하고 일반 클래스와 다르지 않다.
+        - 추상 클래스에도 생성자가 있으며, 멤버 변수와 메서드도 가질 수 있다.
+        - 추상 메서드가 없더라도 일반 클래스에 abstract를 붙여서 추상 클래스로 만들 수 있는데,
+          이렇게 하면 추상 클래스로 지정되어 인스턴스를 생성할 수 없다.
+          오직 상속을 통해서 자손 클래스에 의해서만 구체화 된다.
+        
+    추상 메서드
+
+        - 선언부만 작성하고 구현부는 작성하지 않은 채로 남겨둔 것.
+        - 메서드의 내용이 상속받는 클래스에 따라 달라질 수 있기 때문에
+          조상 클래스에서는 선언부만 작성하고 내용을 비워두는 것.
+
+    추상 메서드 표현 방법
+
+        - 선언부 맨 앞에 abstract라는 키워드를 붙이면 된다.
+
+            abstract 리턴타입 메서드이름();
+
+    인터페이스란?
+
+        - 구현된 것은 아무것도 없는 밑그림만 있는 기본 설계도.
+        - 일반 메서드 또는 멤버 변수를 가질 수 없고, 오직 추상 메서드와 상수만을 멤버로 가질 수 있다.
+          따라서 추상 클래스보다 추상화가 더 높다.
+        - 인터페이스는 표준, 약속, 규칙이다.
+
+    인터페이스 작성 방법
+
+        - class 대신 interface라는 키워드를 사용한다.
+        - class와 같이 접근제어자로 public이나 default를 사용할 수 있다.
+
+        interface 인터페이스 이름 {
+            public static final 타입 상수이름 = 값;
+            public abstract 메서드이름(매개변수목록);
+        }
+
+    인터페이스 제약사항
+
+        - 모든 멤버 변수는 public static final 이어야 하며, 이를 생략 가능.
+        - 모든 메서드는 public abstract 이어야 하며, 이를 생략 가능.
+
+    인터페이스의 상속
+
+        - 인터페이스는 인터페이스로부터만 상속 받을 수 있다. (Object와 같은 최고 조상이 없다.)
+        - 여러개의 인터페이스로부터 상속 가능. (다중 상속 가능.)
+
+    인터페이스의 구현
+
+        - 그 자체로는 인스턴스를 생성할 수 없다.
+        - 구현한다는 의미의 implements를 사용해서 구현한다. (클래스는 확장한다는 의미에 extends를 사용.)
+        - 만약 인터페이스의 메서드 중 일부만 구현한다면, 추상 클래스로 선언되어야 한다.
+        - 상속과 구현을 동시에 할 수 있다.
+
+        class 클래스이름 implements 인터페이스이름 {
+            // 인터페이스에 정의된 추상 메서드를 구현.
+        }
+
+        abstract class 클래스이름 implements 인터페이스이름 {
+            // 인터페이스에 정의된 추상 메서드의 일부만 구현
+        }
+
+        class 클래스이름 extends 조상클래스이름 implements 인터페이스이름 {
+        }
+
+    인터페이스의 장점
+
+        - 개발 시간을 단축시킬 수 있음.
+        - 표준화가 가능.
+        - 서로 관계없는 클래스들에게 관계를 맺어 줄 수 있다.
+            -> 하나의 인터페이스를 공통적으로 구현하도록 함으로써 관계를 맺어 줄 수 있다.
+        - 독립적인 프로그래밍이 가능. 
+            -> 클래스와 클래스간의 직접적인 관계를 인터페이스를 이용해서 간접적인 관계로 변경하면,
+               한 클래스의 변경이 관련된 다른 클래스에 영향을 미치지 않도록 독립적인 프로그래밍이 가능.
+
+               개인적으로는 종속성을 없애준다는 것으로 이해했다.
+
+        직접적인 관계의 두 클래스 (A-B)
+
+            class A {
+                public void methodA(B b) {
+                    b.methodB();
+                }
+            }
+            class B {
+                public void methodB() {
+                    System.out.println("methodB()");
+                }
+            class Test {
+                public static void main(String[] args) {
+                    A a = new A();
+                    a.methodA(new B());
+                }
+            }
+
+        간접적인 관계의 두 클래스 (A-I-B)
+
+            class A {
+                public void methodA(I i) {
+                    i.methodB();
+                }
+            }
+            Interface I {
+                void methodB();
+            }
+            class B implements I {
+                public void methodB() {
+                    System.out.println("methodB()");
+                }
+            }
+            class C implements I {
+                public void methodB() {
+                    System.out.println("methodB() in C");
+                }
+            }
+
+    추상 클래스와 인터페이스 비교
+
+        - 공통점
+            - 스스로 객체를 생성할 수 없다.
+            - 상속 관계에서만 존재한다. (구현을 목적으로 한다.)
+
+        - 차이점
+            - 다중 상속을 지원한다. (인터페이스)
+            - 모든 자원이 미완성이다. (인터페이스)
+
+    믹스인이란?
+
+        - "메소드가 딸린 인터페이스"
+        - 다른 클래스들의 메소드 조합을 포함하는 클래스
+        - 원래의 클래스에 부가적인 기능을 덧붙여 확장하는 것
+        - 상속과 유사한 면이 있으나 기존의 클래스를 직접 변경·확장한다는 점이 다름
+
+
+리액트에서의 비동기 요청
+
+    라이프 사이클을 통해 비동기 요청 관리를 안해주면
+    컴포넌트가 생성되었다가 소멸될 때마다 setInterval 같은 애들은 계속 늘어난다. (증식 ㄷㄷㄷ)
+
+    componentDidMount나 componentDidUpdate 에서 비동기 요청을 했는데
+    그게 남아있으면 문제가 되겠지? 그런 애들은 componentWillUnmount에서 정리해주자.
+
+    만약에 안 없애면??
+
+        계속 찍히는 것도 문제가 되지만, 
+        setInterval, setTimeout 이런 애들 남아있으면 다 메모리 먹음.
+        
+        따라서 해결 안하고 그냥 내비두면 메모리 누수 발생해서 터진다.
+        완료되지 않은 비동기 요청은 componentWillUnmount에서 정리를 꼭 해줘!!!!
+
+    * 비동기 함수가 바깥에 있는 변수를 참조하면 클로저가 발생한다. 
+    
+        그럼 어떻게 하나요?? 
+        동적으로 바뀌는 state를 구조분해로 할당하려면 비동기 안에 써주자.
+
+        ex) 
+            // const { imgCoord } = this.state; - 여기서 사용 X
+
+            this.interval = setInterval(() => {
+                const { imgCoord } = this.state; // 여기서 사용 O
+                ...
+            }
+
+보면 대략 멍해지는 코드 복습
+
+    const computerChoice = (imgCoord) => { // 컴퓨터가 뭘 내고 있는지 판단함
+        return Object.entries(rspCoords).find(function(v) {
+        return v[1] === imgCoord;
+      })[0];
+    };
+
+    Object.entries()
+
+        Object.entries() 메서드는 for...in와 같이, 순서로 주어진 객체 자체의 
+        enumerable 속성 [key, value] 쌍의 배열을 반환합니다. 
+        (for-in 루프가 다른점은 프로토 타입 체인의 속성도 열거한다는 점입니다.)
+
+    Array.prototype.find()
+
+        find() 메서드는 주어진 판별 함수를 만족하는 첫 번째 요소의 값을 반환합니다. 
+        그런 요소가 없다면 undefined를 반환합니다.
+
+
+includes() 메서드
+
+    Array.prototype.includes();
+    
+        배열이 특정 요소를 포함하고 있는지 판별합니다.
+
+        arr.includes(valueToFind[, fromIndex])
+
+        ex)
+            // array length is 3
+            // fromIndex is -100
+            // -1 인덱스부터 'c' 니깐 음..
+            // computed index is 3 + (-100) = -97
+
+            // -3 배수니깐 c -> b -> a 즉 a부터 시작이겠지??
+
+            var arr = ['a', 'b', 'c'];
+
+            arr.includes('a', -100); // true
+            arr.includes('b', -100); // true
+            arr.includes('c', -100); // true
+            arr.includes('a', -2); // false
+
+    String.prototype.includes();
+    
+        하나의 문자열이 다른 문자열에 포함되어 있는지를 판별하고, 
+        결과를 true 또는 false 로 반환합니다.
+
+        str.includes(searchString[, position])
+
+        ex)
+
+            var str = 'To be, or not to be, that is the question.';
+
+            console.log(str.includes('To be', 1));    // false
+
+setState랑 render 는 Queue 처럼 찬다.
+
+    따라서 리랜더링 속도를 매우우우우 빠르게 해줘도 괜찮다.
+    비동기 사용할 때도 clear 초기화만 잘해준다면 괜찮음!
+
+Hooks는 Lifecycle API 를 갖고 있지 않다!!!
+
+    이런게 문제가 되기 때문에 어떻게든 해줘야 겠죠???
+
