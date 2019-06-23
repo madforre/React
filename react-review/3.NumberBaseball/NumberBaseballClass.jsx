@@ -54,7 +54,7 @@ class NumberBaseballClass extends PureComponent {
                 answer: getNumbers(),
                 tries: [],
                 deny: ''
-            }); 
+            });
         } else {
             const answerArray = value.split('').map((v) => parseInt(v));
             let strike = 0;

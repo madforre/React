@@ -1605,3 +1605,38 @@ Hooks는 Lifecycle API 를 갖고 있지 않다!!!
 
     이런게 문제가 되기 때문에 어떻게든 해줘야 겠죠???
 
+    useEffect() 로 처리해준다!!!
+
+    * useEffect 도 useState()나 useRef() 처럼
+      함수 컴포넌트 안에 작성한다.
+
+
+* 함수 컴포넌트는 랜더링이 될 때마다 컴포넌트 내 로직들이 통째로 다시 실행됩니다.
+
+
+useEffect()는 혼종이다???
+
+    useEffect(() => { // componentDidMount, componentDidUpdate 역할 (1대1 대응은 아님)
+        return ( )=> { // componentWillUnmount 역할
+
+        }
+    }, []);
+
+    세가지 라이프 사이클을 합쳐놨음..
+
+    두번째 인수인 배열안에 값을 아예 안넣으면 뭐가 바뀌던지 신경 안쓰고 딱 한번만 실행하겠다는 의미임.
+    inputs에 해당하는 빈 배열안에 여러개의 값을 넣어도 된다.
+    
+    즉, 빈 배열이면 componentDidMount 역할임.
+    inputs 넣으면 componentDidUpdate 역할하는 거임. (배열에 넣은 값들이 바뀔 때 useEffect가 재실행된다.)
+
+useEffect()는 여러번 쓸 수 있다!!
+
+    state 마다 다른 effect를 내고 싶을 수 있음!
+
+    class의 경우, componentDidMount나 componentDidUpdate에서 모든 state를 조건문으로 분기 처리함!
+
+
+
+
+
