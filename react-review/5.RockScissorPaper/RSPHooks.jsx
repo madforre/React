@@ -16,7 +16,7 @@ const scores = {
 
 const speed = { // millisecond 기준 (ms)
     computer: 50,
-    restart: 1500,
+    restart: 3000,
 }
 
 const computerChoice = (imgCoord) => { // 컴퓨터가 뭘 내고 있는지 판단함
@@ -28,19 +28,28 @@ const computerChoice = (imgCoord) => { // 컴퓨터가 뭘 내고 있는지 판�
     })[0];
 };
 
-const RSP = () => { // 함수컴포넌트는 랜더링이 될 때마다 컴포넌트 내가 통째로 다시 실행된다.
+const RSP = () => { // 함수컴포넌트는 랜더링이 될 때마다 컴포넌트 안이 통째로 다시 실행된다.
     const [result, setResult] = useState('');
     const [imgCoord, setImgCoord] = useState('-12px');
     const [score, setScore] = useState(0);
     const interval = useRef();
 
+    // userEffect도 한번
     useEffect(() => { // componentDidMount, componentDidUpdate 역할 (1대1 대응은 아님)
+        console.log('다시 실행');
         interval.current = setInterval(changeHand, speed.computer); // - 컴포넌트가 첫 렌더링된 후. 여기엔 비동기 요청을 많이 작성.
         console.log('re-rendering! rspCoords is ', rspCoords) // 재랜더링시.
         return ( ) => { // componentWillUnmount 역할
+            console.log('종료');
             clearInterval(interval.current); // - 컴포넌트가 제거되기 직전, 여기엔 비동기 요청을 많이 정리함.
         }
-    }, [imgCoord]); // 두 번째 인수 배열에 넣은 값들이 바뀔 때 useEffect가 실행된다.
+    }, [imgCoord]); // 두 번째 인수 배열에 넣은 값들이 바뀔 때마다 useEffect가 계속 실행된다.
+    // 두번째 인자 배열에는 바뀌는 state를 할당하면 된다.
+    // 함수형 컴포넌트가 매번 실행되어야하는 특성때문에 어려운 부분임. 패턴처럼 기억하는 것이 좋다.
+    // 두번째 인자가 없으면, 처음에만 실행하고 그 다음부터는 실행되지 않음. - componentDidMount라고 생각하면됨.
+
+
+
     // 매번 setInterval이 시작됐다가 clearInterval을 하기 때문에 그냥 setTimeout을 하는 것과 동일하다.
     // 함수 컴포넌트가 매번 다시 실행된다는 특성을 외워두자. 패턴처럼 외워둡시다.
     // 인수 배열을 빼버리면 뭐가 바뀌던지 신경 안쓰고 딱 한번만 실행하겠다는 의미임.
@@ -60,7 +69,7 @@ const RSP = () => { // 함수컴포넌트는 랜더링이 될 때마다 컴포�
         }
     }
 
-    const onClickBtn = (choice) => (e) => { // 와우!! 자바스크립트 고차함수 패턴!!!!
+    const onClickBtn = (choice) => (e) => { // 리액트에서 자주 쓰는 패턴임.
         clearInterval(interval.current); // 시각적으로 잠깐 멈춰야함. 일단 멈춰!!!
         const myScore = scores[choice];
         const cpuScore = scores[computerChoice(imgCoord)];
@@ -87,10 +96,9 @@ const RSP = () => { // 함수컴포넌트는 랜더링이 될 때마다 컴포�
 
     const onRestart = () => {
         // init
-        clearTimeout(autoRestart);
         clearInterval(interval.current);
         setResult('');
-        interval.current = setInterval(changeHand, speed.computer);
+        autoRestart();
     }
 
     return (

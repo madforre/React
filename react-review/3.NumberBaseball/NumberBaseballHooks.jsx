@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react'; // import 시 useState도 명시 해주면 한번에 쓸 수 있어 편함.
+import React, { useState, memo, createRef, useEffect } from 'react'; // import 시 useState도 명시 해주면 한번에 쓸 수 있어 편함.
 import Try from './TryHooks';
 
 const getNumbers = () => { // 숫자 4개를 겹치지 않고 랜덤하게 뽑는 함수
@@ -24,11 +24,22 @@ function stringToUniquedArray(v) {
 }
 
 const NumberBaseballHooks = memo(() => {
+    
     const [result, setResult] = useState('');
     const [value, setValue] = useState('');
     const [deny, setDeny] = useState('')
     const [tries, setTries] = useState([]);
-    const [answer, setAnswer] = useState(getNumbers());
+    const [answer, setAnswer] = useState(getNumbers()); // memoized 된 값이 아님. 추후 배울 것임. useMemo 등..
+
+    const inputRef = createRef();
+
+    useEffect(() => {
+        inputRef.current.focus();
+        console.log('이펙트테스트');
+        return () => {}
+    }, []); 
+    // 두번째 인자를 빈 배열로 할당해주면 
+    // 매번 재랜더링이 되지 않고 componentDidMount 일 때만 작동한다.
 
     const onSubmitForm = (e) => {
 
@@ -73,17 +84,19 @@ const NumberBaseballHooks = memo(() => {
                 setValue('');
             }
         }
+        inputRef.current.focus();
     };
 
     const onChangeInput = (e) => {
         setValue(e.target.value);
+        inputRef.current.focus();
     };
 
     return (
         <>
             <h1>씬나는 숫자야구 ( 1 ~ 9 )</h1>
             <form onSubmit={onSubmitForm}>
-                <input maxLength={4} value={value} onChange={onChangeInput} />
+                <input ref={inputRef} maxLength={4} value={value} onChange={onChangeInput} />
                 <button>제출</button>
             </form>
             <div>{result}</div>

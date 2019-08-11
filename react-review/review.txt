@@ -1006,31 +1006,68 @@ Hooks 로 선언했던 애들은 React Devtools에 순서대로 표기된다.
     }
 
     좀더 간단한 방법이 없을까?
+    퓨어 컴포넌트를 쓰면 된다! (shouldComponentUpdate를 알아서 구현한 애임.)
 
-        PureComponent는 state가 바뀔 때만 렌더링을 한다.
-        PureComponent로 쓰면 된다. (props 전달받아 변경되는 자식 컴포넌트에도 팍팍 써주자.)
+    퓨어컴포넌트에 대해서 알아보자.
 
-        PureComponent로 바꾸면 state가 바뀌었는지 안바뀌었는지 알아채게 된다.
+        The major difference between React.PureComponent and React.Component is 
+        PureComponent does a shallow comparison on state change. 
+        It means that when comparing scalar values it compares their values, 
+        but when comparing objects it compares only references. 
+        It helps to improve the performance of the app.
+        You should go for React.PureComponent when you can satisfy any of the below conditions.
 
-        * 컴포넌트가 복잡해지면 PureComponent가 안되는 경우도 있음.
-        * shouldComponentUpdate 는 좀더 커스터마이징이 가능하다.
+            State/Props should be an immutable object
+            State/Props should not have a hierarchy
+            You should call forceUpdate when data changes
 
-    실무에서는 Component를 쓰게 되는 상황도 많다.
-    state가 바뀌었는데 렌더링을 하고 싶지 않은 경우도 있음!
-    이럴 때는 Component를 써서 shouldComponentUpdate로 원하는 것만 랜더링을 다시 해주면 되겠죠?!
+        If you are using React.PureComponent you should make sure all child components are also pure.
+        PureComponent will increase your app performance (because of shallow comparison).
+        Prop changes will be ignored If it couldn't find difference in shallow comparison.
+    
+        
+        퓨어컴포넌트던 원래 컴포넌트던간에 불변성을 유지해주어야 한다!!
+        값을 바꿔줄 때는 객체랑 배열은 새롭게 만들어주어야 한다.
+        새로운 배열이나 객체를 만들어주지 않으면 변화를 알아차리지 못한다!!!
+        
+        에러가 발생할 수 있으므로 불변성을 유지하고 
+        새로운 배열이나 객체를 만들어주도록 하자!!
+
+        
+        * 컴포넌트가 복잡해지면 PureComponent가 안되는 경우?
+        
+            퓨어컴포넌트는 얕은 비교를 한다. (이는 성능 향상으로도 이어짐).
+            객체가 계층적으로 깊어지면 deep comparison, 깊은 비교가 안되므로
+            PureComponent가 잘 동작하지 않는다. (렌더링이 자동으로 안일어난다는 얘기.)
+            
+        * shouldComponentUpdate는 퓨어컴포넌트보다 좀더 커스터마이징이 가능하다.
+          컴포넌트를 잘게 쪼갤수록 퓨어컴포넌트를 적용하기가 쉬워진다.
+
+    props랑 state가 바뀌었을때마다 항상 렌더링을 하고 싶지 않은 경우가 있음.
+    그런 경우에는 shouldComponentUpdate로 원하는 것만 렌더링을 다시해준다.
+
+        실무에서는 React.Component를 쓰게 되는 상황도 많다.
+        state가 바뀌었는데 렌더링을 하고 싶지 않은 경우도 있음!
+        이럴 때는 React.Component를 써서 shouldComponentUpdate로 원하는 것만 랜더링을 다시 해주면 되겠죠?!
 
     --------------------
 
     Hooks에서는 어떻게 써줘야 하는가??
+
     React.memo 가 있다. (memorization 의 줄임말인데)
     
     얘도 props나 state 바뀌었을 때만 렌더링을 해준다.
 
+    훅 쓰는 부모컴포넌트에서 child 컴포넌트를 가지고 있으면 부모 컴포넌트 랜더링 될 때
+    자식도 무조건 변경된다.
+    부모 컴포넌트의 child가 props가 바뀌면 리렌더링이 계속 되기 때문에 memo 감싸주면 리랜더링이 안된다.
+
+    memo 예시
     ex)
 
         import React, { memo } from 'react';
 
-        const Try = memo(({ tryInfo }) => {
+        const Try = memo(({ tryInfo }) => { // 요렇게 함수형 컴포넌트 감싸줌. 
             return (
                 <li>
                     <div>{tryInfo.try}</div>
@@ -1039,12 +1076,16 @@ Hooks 로 선언했던 애들은 React Devtools에 순서대로 표기된다.
             )
         });
 
+        export default Try;
+
     이런 식으로 memo로 감싸주면 된다.
     
     항상 제일 자식인 애들에게 memo나 PureComponent 를 적용해주는게 좋다.
     자식이 모두 PureComponent나 memo면 부모에도 적용해주면 됩니당.
 
-export default Try;
+    보통 제일 하위에 있는 컴포넌트는 퓨어컴포넌트로 하는 편.
+    데이터를 담고 있다기보단 화면에 뿌려주는 랜더링 역할을 하는 컴포넌트들이기 때문.
+    퓨어 컴포넌트나 memo로 해주자.
 
 
 객체안에 배열 배열안에 객체.. 최대한 피해라!
@@ -1150,11 +1191,6 @@ ContextAPI
     Context 좀 응용한게 Redux.
 
     props의 진화형이 Context 라고 보면 됩니다.
-
-Ref - 반응속도체크
-
-useEffect - 가위바위보
-
 
 리액트에서는 가독성을 저해하는 요인으로 for와 if를 못쓴다.
 
@@ -1304,35 +1340,35 @@ ES6 vs ES5 Class 문법 비교
     ES6 (ES2015):
 
         class Cat { 
-        constructor(name) {
-            this.name = name;
-        }
-        
-        speak() {
-            console.log(this.name + ' makes a noise.');
-        }
+            constructor(name) {
+                this.name = name;
+            }
+            
+            speak() {
+                console.log(this.name + ' makes a noise.');
+            }
         }
 
         class Lion extends Cat {
-        speak() {
-            super.speak();
-            console.log(this.name + ' roars.');
-        }
+            speak() {
+                super.speak();
+                console.log(this.name + ' roars.');
+            }
         }
 
     ES5:
 
         function Cat(name) {
-        this.name = name;
+            this.name = name;
         }
 
         Cat.prototype.speak = function () {
-        console.log(this.name + ' makes a noise.');
+            console.log(this.name + ' makes a noise.');
         };
 
         function Lion(name) {
-        // `super()` 호출
-        Cat.call(this, name);
+            // `super()` 호출
+            Cat.call(this, name);
         }
 
         // `Cat` 클래스 상속
@@ -1341,8 +1377,8 @@ ES6 vs ES5 Class 문법 비교
 
         // `speak()` 메서드 오버라이드
         Lion.prototype.speak = function () {
-        Cat.prototype.speak.call(this);
-        console.log(this.name + ' roars.');
+            Cat.prototype.speak.call(this);
+            console.log(this.name + ' roars.');
         };
 
 
@@ -1610,6 +1646,8 @@ Hooks는 Lifecycle API 를 갖고 있지 않다!!!
     * useEffect 도 useState()나 useRef() 처럼
       함수 컴포넌트 안에 작성한다.
 
+    라이프 사이클을 흉내냄.
+
 
 * 함수 컴포넌트는 랜더링이 될 때마다 컴포넌트 내 로직들이 통째로 다시 실행됩니다.
 
@@ -1625,7 +1663,7 @@ useEffect()는 혼종이다???
     세가지 라이프 사이클을 합쳐놨음..
 
     두번째 인수인 배열안에 값을 아예 안넣으면 뭐가 바뀌던지 신경 안쓰고 딱 한번만 실행하겠다는 의미임.
-    inputs에 해당하는 빈 배열안에 여러개의 값을 넣어도 된다.
+    inputs에 해당하는 빈 배열안에 여러개의 state 값을 넣어도 된다.
     
     즉, 빈 배열이면 componentDidMount 역할임.
     inputs 넣으면 componentDidUpdate 역할하는 거임. (배열에 넣은 값들이 바뀔 때 useEffect가 재실행된다.)
@@ -1634,9 +1672,415 @@ useEffect()는 여러번 쓸 수 있다!!
 
     state 마다 다른 effect를 내고 싶을 수 있음!
 
-    class의 경우, componentDidMount나 componentDidUpdate에서 모든 state를 조건문으로 분기 처리함!
+    class의 경우, componentDidMount나 componentDidUpdate에서 
+    모든 state를 조건문으로 분기 처리함!
 
 
+setState랑 render랑 큐처럼 작동해서
+
+    ms를 엄청빨리 해도 엇갈리지 않음.
+    setState가 여러개면 알아서 한번에 모아서 처리해줌.
+    다만, setInterval 거쳐서 나오는 setState는 각각 랜더링 될거임.
+
+    랜더링을 너무 짧게하면 브라우저에 문제가 생길 수도 있음.
+    (0.01초 단위로 리랜더링 일어나면 성능에 문제 생김. 0.1초 이상으로 하자 되도록.)
+
+    크롬브라우저의 devtools로 리액트 개발하도록 하자!
+    빨간색 리랜더링이 자주 일어나는지 안 일어나는지 체크할 것.
+
+Hook 사용시
+    --------------------------
+    클래스 컴포넌트 시용시
+    --------------------------
+        클래스 컴포넌트는 라이프사이클에서 state 사용할 때는 한번에 setState 처리 가능.
+
+    ex) componentDidMount() {
+        this.setState({
+            imgCoord: 3,
+            score: 1,
+            result: 2,
+        })
+    }
+    --------------------------
+    Hooks 사용시
+    --------------------------
+        state로 관리 안하는 변수들은 묶어서 컴포넌트 밖으로 빼줌!
+
+        hooks에서 useEffect 사용할 때 클래스 컴포넌트처럼 라이프사이클을 써줄 때는 아래의 순서대로 기억.
+    
+            componentDidMount
+            componentDidUpdate
+            componentWillUnmount
+
+            ex)
+                useEffect(() => {
+                    setImgCoord();
+                    setScore();
+                }, [imgCoord, score]);
+
+                useEffect(() => {
+                    setResult();
+                }, [result]);
+
+        세로로 한번에 묶일수도 있고 따로 하나씩 처리할 수도 있음.
+        useEffect를 여러번 (세로로) 써서 처리 가능.    
 
 
+useLayoutEffect??
+
+    리사이징 등등 화면 크기 늘렸다 줄였다 하고 나서 useEffect가 실행되는데,
+    useLayoutEffeect는 이런거 하기 전에 발생함.
+
+    레이아웃의 변화를 감지할 때 
+
+    useEffect는 화면이 완전히 바뀌고 난 후에 발생하고,
+
+    useLayoutEffect는 화면이 바뀌기 전에 발생해서 화면 바뀌는걸 감지하는 이펙트임.
+
+    사용법은 useEffect랑 똑같음.
+
+    단지 화면이 완전히 바뀌고 나서 실행되냐, 변경이 있을 때 실행되냐 차이임.
+
+setInterval은 componentDidMount에서만 쓰나요??
+
+    랜더링 되는 부분 빼고는 필요할 때 setInterval을 쓰고
+    나중에 componentWillUnmount에서 정리만 해주면 됩니다.
+
+스케쥴링 관련 함수.
+
+    setTimeout은 일정 시간 간격 이후에 함수가 한번 실행됩니다.
+    setInterval은 일정 시간 간격으로 함수가 주기적으로 실행됩니다.
+
+    위의 두 메소드들은 자바스크립트 스펙의 일부가 아닙니다. 
+    하지만 대부분의 환경은 내부적인 스케쥴러를 갖고 있습니다. 
+    그리고 이러한 메소드들을 제공합니다. 
+    구체적으로는, Node.JS와 모든 브라우저에서 제공됩니다.
+
+리액트에서 비동기 스케쥴링 함수 사용시 주의점
+
+    내가 원치 않았는데 컴포넌트가 사라질 경우를 조심해야한다!!
+    부모컴포넌트가 자식컴포넌트(Lotto 라고 가정)를 없앨 경우.
+
+    부모컴포넌트가 Lotto 컴포넌트를 없앴는데 setTimeout 가 남아있으면
+    메모리를 계속 차지할 수도 있기 때문에 항상 componentWillUnmount()에서
+    정리를 해주어야 한다.
+
+    setTimeout이 실행되지 않았는데 컴포넌트가 unmount 되는 경우도 생각해야주어야 한다.
+    아직 발생하지 않았어도 꼭 챙겨주어야 하는 부분임.
+
+    특히 셋타임아웃은 한번만 실행되고 정리되는거라 상관이 별로 없는데,
+    setInterval 같은 경우에는 메모리상에 남아서 계속 반복실행되므로
+    꼭! 정리해주어야한다.
+
+    브라우저 끄는거는 완전히 종료되는거라 componentWillUnmount가 발생 안하긴 하지만,
+    그냥 부모 컴포넌트가 비동기가 있는 자식 컴포넌트를 없애버렸다고 일반적으로 생각하자.
+
+    참고로 Hooks에서는 setTimeout을 항상 useRef가 담당했었다.
+
+Arrow function
+
+    헷갈리는점 정리해봄.
+
+    let hi = () => {1};
+    console.log(hi()); // <-- undefined
+    hi = () => (1);
+    console.log(hi()); // <-- 1
+    
+    () => {1}; // 그냥 함수안에 1
+    () => (1); // return 1
+
+Will 시리즈들은 componentWillUnmount 빼고는 다 사라질거임.
+
+class에서 ref를 hooks랑 비슷하게 만드는 방법
+
+    바로 createRef!!
+
+    React.createRef가 있습니다. (react 객체 안에 들어있음. purecomponent랑 memo처럼.)
+    얘로 통일합시다. (클래스 컴포넌트, 훅스 다 됨)
+
+    class 컴포넌트에서 예전방식이 쓰이는 이유?? 함수라서 자유도가 좀 높음.
+    간단하게 하고싶다 하면 createRef를 써서 만들어주면 됩니다.
+
+얕은 복사(Shallow Copy)
+
+    새로운 객체에 원본 객체의 프로퍼티의 값을 정확히 복사한다.
+    하지만 만약 프로퍼티의 값이 객체 형태라면, 객체의 주소를 복사한다. 
+    즉, 복사된 객체는 원본 객체와 동일한 프로퍼티와 값들을 새롭게 가지지만, 
+    주소가 복사된 프로퍼티는 새로운 형태가 아닌 같은 것을 공유하게 된다.
+    즉 참조임.
+
+    구현 방법
+
+        전개 연산자 {...obj}
+        return object.assign({}, obj);
+
+깊은 복사(Deep Copy)
+
+    깊은 복사는 원본 객체를 완전히 복사하게 된다.
+    주소를 복사하지 않고, 새로운 메모리 공간을 확보해 생성하게 된다.
+    새로운 메모리 공간을 확보해서 생성하기 때문에, 완전히 다른 것을 의미한다.
+
+    구현 방법
+
+        루프 => 재귀
+        JSON
+        라이브러리(jQuery, lodash...)
+
+프로퍼티와 상태(state)의 개념
+
+    컴포넌트 트리에서 사용하는 모든 속성은 상태(state)와 프로퍼티(props)로 나뉜다. 
+    상호작용이 필요한 경우에는 상태에 보관되어야 하고, 그 외 나머지는 모두 프로퍼티 형식으로 전달한다.
+
+리액트에서 상태를 업데이트하는 방법
+
+    리액트에서 상태를 업데이트 하려면 setState() 메소드를 호출한다. 
+    setState는 업데이트 할 부분을 포함하는 객체를 인자로 받는다. 
+    그리고 인자로 받아온 객체를 state에 merge하는 방식으로 상태를 업데이트 한다.
+    좀 더 자세히 말하자면 merge 된 객체로 새로운 트리를 그려서 
+    이전 트리와 비교해서 변경된 부분을 파악하고 DOM을 업데이트 하는 것이다.
+    하지만 뜻대로 되지 않는 경우가 있다.
+
+    ex) 
+
+        this.state.value = 3;
+        this.setState({ value: this.state.value + 1});
+        this.setState({ value: this.state.value + 1});
+        this.setState({ value: this.state.value + 1});
+
+        // expect 6
+        // but this.state.value = 4
+
+    왜 6이 아니고 4일까???
+
+    setState의 상태 업데이트 방식을 보자.
+
+        리액트가 여러번 setState를 만나게 되면 일괄처리하여 작업을 한다.
+        매번 호출 순서대로 바로 업데이트하지 않고 
+        인자로 전달된 객체들을 하나로 합친 뒤에 업데이트하기 때문이다.
+        setState가 여러번 호출되면 인자로 전달된 각 객체를 추출하여 단일 객체로 merge 한다. 
+        그렇게 만들어진 단일 객체를 사용해서 상태를 업데이트 하는 것이다.
+        이런 과정을 오브젝트 컴포지션이라고 하는데 코드로 풀어보면 아래와 같다.
+
+        const singleObj = Object.assign(
+            {},
+            objectFromSetState1,
+            objectFromSetState2,
+            objectFromSetState3
+        );
+
+        객체가 동일한 키를 가지고 있다면 가장 마지막에 전달된 객체의 키값이 덮어쓰여진다.
+        이처럼 setState는 상태를 비동기적을 갱신한다. 
+        그래서 가끔 문제가 없어 보이는 코드인데 상태가 원하는대로 업데이트 되지 않는 일이 벌어질 때도 있다. 
+        그렇다면 상태를 업데이트 할 때 좀 더 믿을만한 이전 상태를 받아오는 방법은 없을까?
+
+        그것은 바로바로 함수를 받는 setState(함수형 setState!)
+
+setState 자유도 늘리기. (함수를 받는 setState, 함수형 setState!)
+
+    함수안에서 리턴해주기 전에 다른 함수를 넣는등 미세한 동작을 더 할 수 있음.
+    자유도가 늘어남. 일급함수. 일급객체.
+    
+    함수안에 다른함수를 넣는게 다른언어에서 흔한게 아님.
+    최신언어들 빼고는 흔하지가 않다.
+    자바에서도 최근버젼 람다 들어오기 전까지는 어려웠던 부분임.
+
+    ex)
+        this.setState((prevState) => {
+            return {
+            }
+        })
+
+        this.setState((state, props) => ({ value: state.value + 1 }));
+
+    함수를 인자로 전달받은 setState는 원하는 시점의 상태를 가지고 업데이트를 한다.
+
+    객체가 아닌 함수형 setState가 호출되면 merge 할 객체가 없기 때문에 호출된 순서대로 함수를 큐에 넣는다.
+    그 후에 큐의 각 함수를 호출하여 함수형 setState의 이전 상태를 전달하여 상태를 업데이트 하는 것이다.
+    이 말은 상태를 업데이트 하는 함수를 외부에 선언해 놓고 가져다 쓰기만 해도 된다는 소리다.
+
+    ex)
+        // 컴포넌트 외부에서 함수 선언
+        function buyBeer (state, props) {
+            return {beer : state.beer + 1}
+        }
+        class Freezer(
+            ...
+        // 컴포넌트 안에서 외부에서 선언한 업데이트 함수 가져다 쓰기
+            buyBeer () {
+                this.setState(buyBeer)
+            }
+        )
+
+    이런식으로 상태를 바꿔주는 함수는 그저 함수일 뿐이다. setState는 가져다 쓰기만 하면 된다. 
+    상태변경 로직을 외부 모듈에 모아두고 필요한 컴포넌트에서 import 해서 쓸 수 도 있다. 
+    이제 컴포넌트 안에 모든 업데이트 로직이 들어있을 필요가 없게 된 것이다!
+    더욱 좋은 점은 테스트도 쉬워진다는 것이다!!
+
+
+setState 다시한번 살펴보자.
+
+    setState 함수에 인자를 object로 줄 경우 setState는 비동기로 작동한다.
+    비동기로 작동한다는 것은 순서를 보장하지 못하고 순서가 중요한 로직일 경우 
+    예측되지 않은 결과를 초래할 수 있다.
+
+    setState({count: this.state.count+1});
+    setState({count: this.state.count+1});
+    setState({count: this.state.count+1});
+
+    한 함수안에서 위의 코드가 실행되면 +3을 기대하게 되지만 실제로는 +1된다.
+    내부적으로 한꺼번에 처리하기 때문이다.
+
+    하지만 함수형으로 실행할 경우
+    
+    setState((state, props) => ({count: state.count+1}));
+    setState((state, props) => ({count: state.count+1}));
+
+    실행 큐에 적재되어 차례차례 실행된다.
+
+    함수형 프로그래밍은 많은 점에서 장점이 있다.
+    테스트가 쉽고 선언적이라 직관적이고 재사용도 용이하다.
+    간단한 상태 변화라도 여러면에서 함수형으로 작성하는 편이 더 유용할 것이다.
+
+useEffect
+
+    useEffect 는 리액트 컴포넌트가 렌더링 될 때마다 특정 작업을 수행하도록 
+    설정 할 수 있는 Hook 입니다. 
+
+useMemo
+
+    useMemo 를 사용하면 함수형 컴포넌트 내부에서 발생하는 연산을 최적화 할 수 있습니다.
+
+memo와 useMemo, useCallback같은 것들을 쓰는 이유?
+
+ 값을 캐싱(기억)해서 다시 렌더링되지 않도록 만들어준다.
+
+    memo는 purecomponent.
+
+    useMemo는 memoizedValue 만들어 씀.
+
+useMemo - 복잡한 함수 결괏값을 기억
+useRef - 일반 값을 기억
+
+
+useMemo 와 useCallback의 차이점.
+
+    useMemo - 함수의 리턴 값을 기억하고 있음. 값을 기억한다! 값을 저장한다.
+
+        useMemo 두번째 인자에 값을 넣어주면 그 값을 잊어먹게 된다.
+        2번째 인자의 요소들이 바뀌기 전까지. 기억한다.
+
+    useCallback - 함수자체를 기억함. 함수 생성자체가 비용이 클 때 써주자!
+
+        useCallback 으로 왠만한 함수 다 감싸도 똑같이 동작하긴 하는데..
+        어떠한 문제가 생기냐면, 기억을 너무 잘해가지고 ㅎㅎ
+        바뀌는 state 관련된 값 console.log 찍어보면 항상 첫번째 값만 기억함.
+
+        useCallback의 두번째 인자의 배열이 의미하는게 useEffect랑 비슷함.
+        useMemo도 마찬가지.
+
+        너무 기억을 잘하면 문제가 생길 수도 있기 때문에
+        까먹을 필요가 있을 때는 두번째 인자의 배열에 까먹을 값을 넣어주면 된다.
+
+        2번째 인자의 요소들이 바뀌기 전까지 기억한다.
+
+Hooks는 순서가 매우 중요함! 순서를 잘 맞춰줘야한다.
+선언해주는 순서에도 신경을 쓰도록 하자.
+
+useCallback 필수로 적용해야될 때?
+
+    자식컴포넌트에 props로 함수를 넘길때에는 useCallback을 꼭 해주어야 한다!!
+
+    useCallback이 없으면 매번 새로운 함수가 생성된다.
+    자식 컴포넌트에 props로 매번 새로운 함수가 전달되면
+    자식 컴포넌트 입장에서는 어? 부모로 부터 받은 props가 바꼈네?
+    부모가 나한테 매번 새로운 props를 주네?
+    즉 매번 새로 랜더링을 해버림. 
+    함수 자체는 사실 바뀐게 하나도 없는데 부모가 함수를 자꾸 바꿔버리니까
+    자식 컴포넌트가 헷갈려함 따라서 리랜더링이 계속 발생함.
+
+    * 자식 컴포넌트에 함수를 넘길때에는 useCallback을 꼭 써주어야 한다!!
+
+Hooks 시리즈들은 순서가 매우 중요해서 중간에 바뀌면 안됩니다!!
+
+    hooks 사용할 때 컴포넌트 내에서
+    state 관련되어서 조건문안에 절대 사용하지 말자!!
+    함수나 반복문 안에도 웬만하면 넣지 말자.
+
+    hooks는 실행순서 로직순서를 항상 지켜주어야 한다.
+    조건문으로 인해서 실행순서가 바뀌면 문제가 생긴다.
+    다른 useEffect 안에도 useState()를 넣으면 안됨.
+    실행 순서가 확실하지 않기 때문에 쓰면 안됨.
+
+    반복문안에서는 useState 넣어도 되긴 함 (순서가 확실히 정해졌으면.)
+    근데 웬만하면 넣지말자. 어떤 문 안에 넣지말고,
+    그냥 hooks들은 최상위로 빼서 실행순서들이 항상 같게끔 만들어주자.
+
+useEffect는 실행한다. 2번째 인자의 요소가 바뀔때.
+
+    useEffect는 무조건 componentDidMount때 실행이 되고,
+    두번째 인자의 배열 요소가 바뀔 때는 componentDidUpdate처럼 또 실행된다.
+
+    state별로 componentDidUpdate 할게 다르다면??
+    걱정하지말고 useEffect 여러개 쓰자!
+
+    클래스 컴포넌트에서 componentDidUpdate안에서 한번에, 조건문으로 나누어 주던 것에 비해
+    Hooks는 useEffect를 여러개 만들어서 따로따로 가져갈 수 있다!
+
+    보통은 componentDidMount에서 ajax요청을 많이 하는데
+    Hooks에서 componentDidMount때에만 ajax 요청을 하고 싶다??
+
+        useEffect(() =>{
+            // ajax 요청
+        }, []); 이렇게 써주면 된다.
+    
+    빈 배열 넣어주면 componentDidMount역할임.
+    바뀔게 아무것도 없으니까 다시 실행 안됨.
+
+    근데 useEffect를 쓰면서 componentDidUpdate에서 ajax요청을 하고 싶은데
+    componentDidMount에서는 실행을 시키지 않고 싶다면??
+    이럴땐 패턴처럼 하나 알아두자.
+    일단은 useEffect가 componentDidMount에서 실행이 한번 됩니다.
+    그건 막을수가 없음. 대신에 아무것도 안하면 됨. 꼼수처럼.
+
+    요렇게 패턴처럼 알아두자.
+
+        const mounted = useRef(false);
+        useEffect(() =>{
+            if (!mounted.current) {
+                mounted.current = true;
+            } else {
+                // 여기서 ajax 요청 하면 된다.
+            }
+        }, [바뀌는 값]); // componentDidUpdate만, componentDidMount X !
+    
+    요렇게 써주면 componentDidMount단계에서 실행은 되지만 아무것도 안하게 된다.
+    실행된 그 다음에는 componentDidUpdate역할만 하게된다.
+    얘네들은 패턴(어떻게보면 꼼수)이니깐 잘 알아두자.
+
+    지금까지 배운 애들을 잘 조합해면, 일대일 대응은 안되지만
+    useState나 useRef 등등 이런 애들을 잘 활용한다면
+    비슷한 효과들을 낼 수 있다.
+
+    shouldComponentUpdate도 Hooks에서 흉내를 내긴 하는데.. 
+    이건 사실 흉내를 낼 필요가 없는듯? 하다고 제로초님이 말했음.
+
+useReducer
+
+    생긴 Hooks들 중에 재밌는 친구임.
+    
+    리덕스에서의 핵심부분인 리듀서를 그대로 들여왔음!
+    리덕스 만든 사람이 공식적으로 리액트팀에 합류하면서 뭔가 입김이 작용한듯.
+
+    어쩄든 얘를 배우면 리액트에서 리듀서 비슷한 효과를 낼 수 있음.
+    그렇다면 얘랑 ContextAPI를 쓰면 리덕스를 대체할 수 있는거 아니냐??
+
+    대체.. 하기는 쫌 그렇고 얘네 조합으로 소규모 앱에서는 대체가능함.
+    규모가 커지면 리덕스가 필요하긴 함.
+
+    ContextAPI랑 useReducer만으로는 비동기적인 작업을 할 때 조금 불편함.
+    비동기 부분 처리를 위해 결국 리덕스를 써야 돼요.
+
+    암튼 얘네조합으로 리덕스를 흉내 낼순 있음.
+
+강의 7-1 틱택토 useReducer 2분 30초부터 계속!
 
