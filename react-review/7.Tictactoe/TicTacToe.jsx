@@ -12,11 +12,14 @@ const initialState = {
         ['', '', ''],
         ['', '', '']
     ],
+    recentCell: [-1, -1], // 처음에는 아무것도 안눌렀으니까 일단 없는 칸을 만들어 놓는다.
 };
 
 export const SET_WINNER = 'SET_WINNER'; // 액션의 이름은 대문자로 하는게 규칙임.
 export const CLICK_CELL = 'CLICK_CELL'; // 액션을 하위 컴포넌트에서 써야 하니깐 export 해줌.
 export const CHANGE_TURN = 'CHANGE_TURN';
+export const RESET_GAME = 'RESET_GAME';
+export const INIT_WINNER = 'INIT_WINNER';
 
 // reduce 함수를 본따 만든 reducer.
 const reducer = (state, action) => {
@@ -41,32 +44,92 @@ const reducer = (state, action) => {
             // const copy_test = tableData[action.row];
             // console.log(tableData[action.row] === [...tableData[action.row]] ? "참조" : "복사된 배열객체");
             // console.log(tableData[action.row] === hi ? "참조" : "복사된 배열객체");
-
             tableData[action.row][action.cell] = state.turn; // action.cell 은 그냥 값이니깐 복사 필요없음.
             return {
                 ...state,
                 tableData,
+                recentCell: [action.row, action.cell],
             }
         }
         case CHANGE_TURN: {
             return {
-                ...state,
+                ...state, // tableData는 shallow copy 되었겠군..
                 turn: state.turn === 'O' ? 'X' : 'O',
             }
         }
+        case RESET_GAME: {
+            const obj = {
+                ...state,
+                tableData: [
+                    ['', '', ''],
+                    ['', '', ''],
+                    ['', '', '']
+                ],
+                recentCell: [-1, -1],
+                turn: 'O',
+            };
+            if (action.draw) {
+                obj['winner'] = "";
+            }
+            return obj;
+        }
+        default:
+            return state; // switch 문이니깐 이렇게 써주면 된대..
     }
 };
 
 const TicTacToe = () => {
     // 3번째 인자는 지연 초기화라고 해서 Lazy initialize라고 있는데 거의안쓰고 복잡해질 때만 쓴다.
     const [state, dispatch] = useReducer(reducer, initialState); 
+    const { tableData, turn, winner, recentCell } = state; // 이렇게 하면 나중에 앞에 state. 더이상 안써도 됨.
+
     // const [winner, setWinner] = useState('');
     // const [turn, setTurn] = useState('0');
     // const [tableData, setTableData] = useState([['','',''], ['','',''], ['','','']]); // 2차원 배열
 
     useEffect(() => {
+        console.log("useEffect 실행");
+        let win = false;
+        let draw; // 무숭부 판별 변수
+        
+        // 승리 조건을 적어주자. 비동기라서 useEffect 쓰는게 좋음.
+        const [row, cell] = recentCell;
+        if (row < 0) return; // 처음꺼만 걸러줌.
+        
+        // 8개 경우의 수를 전부 구해주는 방법.
+        if (tableData[row][0] === turn && tableData[row][1] === turn && tableData[row][2] === turn) {
+            win = true; // 가로줄 검사
+        }
+        if (tableData[0][cell] === turn && tableData[1][cell] === turn && tableData[2][cell] === turn) {
+            win = true; // 세로줄 검사
+        }
+        if (tableData[0][0] === turn && tableData[1][1] === turn && tableData[2][2] === turn) {
+            win = true; // 대각선 검사1
+        }
+        if (tableData[0][2] === turn && tableData[1][1] === turn && tableData[2][0] === turn) {
+            win = true; // 대각선 검사2
+        }
+        console.log(win, row, cell, recentCell, turn);
+        if (win) { // 승리시
+            dispatch({ type: SET_WINNER, winner: turn });
+            // 승리한 유저가 있으면 게임을 리셋한다.
+            dispatch({ type: RESET_GAME });
+        } else {
+            draw = true; // draw이 true면 무승부.
+            tableData.forEach((row) => { // 무승부 검사
+                row.forEach((cell) => {
+                    if(!cell) {
+                        draw = false;
+                    }
+                });
+            });
+            // 확인후 무승부면 게임을 리셋한다. 아닐경우 턴을 바꿔준다.
+            draw ? dispatch({ type: RESET_GAME, draw: draw }) : dispatch({ type: CHANGE_TURN })
+        }
         return () => {};
-    }, [])
+        // tableData 대신에 recentCell값이 바뀔 때마다 componentDidUpdate처럼 효과주기.
+        // 단, useEffect니깐 componentDidMount 단계도 같이 실행된다.
+    }, [recentCell]);
 
     // const onClickTable = useCallback( () => {
     //     dispatch({ type: SET_WINNER, winner: '0' }); // dispatch 안에 들어가는 애들은 액션이라고 부릅니다. 리덕스에서 따온 애들.
@@ -85,8 +148,8 @@ const TicTacToe = () => {
         // state가 많아지면 관리가 힘들겠죠?
         <>
             {/* dispatch도 넘겨주어야 해요. */}
-            <Table tableData={state.tableData} dispatch={dispatch}/>
-            {state.winner && <div>{state.winner}님의 승리</div>}
+            <Table tableData={tableData} dispatch={dispatch}/>
+            {winner && <div>{winner}님의 승리!</div>}
         </>
     );
 };

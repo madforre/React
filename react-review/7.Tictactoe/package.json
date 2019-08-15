@@ -4,7 +4,7 @@
   "description": "react webpack config",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --hot"
+    "dev": "webpack-dev-server --hot --open"
   },
   "author": "madforre@gmail.com",
   "license": "ISC",
