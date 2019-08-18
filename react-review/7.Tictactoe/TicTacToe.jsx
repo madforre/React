@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useCallback, useEffect } from 'react';
+import React, { useState, useReducer, memo, useEffect } from 'react';
 import Table from './Table';
 
 // useReducer 쓸 때는 우리가 만든 state들을 모아놓으면 된다.
@@ -13,6 +13,7 @@ const initialState = {
         ['', '', '']
     ],
     recentCell: [-1, -1], // 처음에는 아무것도 안눌렀으니까 일단 없는 칸을 만들어 놓는다.
+    message: '',
 };
 
 export const SET_WINNER = 'SET_WINNER'; // 액션의 이름은 대문자로 하는게 규칙임.
@@ -55,6 +56,8 @@ const reducer = (state, action) => {
             return {
                 ...state, // tableData는 shallow copy 되었겠군..
                 turn: state.turn === 'O' ? 'X' : 'O',
+                message: `${state.turn === 'O' ? 'X' : 'O'}님의 차례입니다.`,
+                winner: '',
             }
         }
         case RESET_GAME: {
@@ -67,9 +70,11 @@ const reducer = (state, action) => {
                 ],
                 recentCell: [-1, -1],
                 turn: 'O',
+                message: ''
             };
             if (action.draw) {
                 obj['winner'] = "";
+                obj['message'] = "무승부!";
             }
             return obj;
         }
@@ -78,10 +83,10 @@ const reducer = (state, action) => {
     }
 };
 
-const TicTacToe = () => {
+const TicTacToe = memo(() => {
     // 3번째 인자는 지연 초기화라고 해서 Lazy initialize라고 있는데 거의안쓰고 복잡해질 때만 쓴다.
     const [state, dispatch] = useReducer(reducer, initialState); 
-    const { tableData, turn, winner, recentCell } = state; // 이렇게 하면 나중에 앞에 state. 더이상 안써도 됨.
+    const { tableData, turn, message, winner, recentCell } = state; // 이렇게 하면 나중에 앞에 state. 더이상 안써도 됨.
 
     // const [winner, setWinner] = useState('');
     // const [turn, setTurn] = useState('0');
@@ -150,8 +155,9 @@ const TicTacToe = () => {
             {/* dispatch도 넘겨주어야 해요. */}
             <Table tableData={tableData} dispatch={dispatch}/>
             {winner && <div>{winner}님의 승리!</div>}
+            {message && <div>{message}</div>}
         </>
     );
-};
+});
 
 export default TicTacToe;

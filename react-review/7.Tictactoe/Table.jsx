@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Tr from './Tr';
 
-const Table = ({ tableData, dispatch }) => { // props를 구조분해 할당으로 각각 따로 받음.
+const Table = memo(({ tableData, dispatch }) => { // props를 구조분해 할당으로 각각 따로 받음.
     return (
         <table>
             <tbody>
@@ -11,6 +11,6 @@ const Table = ({ tableData, dispatch }) => { // props를 구조분해 할당으�
             </tbody>
         </table>
     );
-};
+});
 
 export default Table;

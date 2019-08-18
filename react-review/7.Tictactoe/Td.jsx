@@ -1,7 +1,10 @@
-import React , { useCallback, useReducer } from 'react';
+import React , { useCallback, memo, useReducer } from 'react';
 import { CLICK_CELL, CHANGE_TURN } from './TicTacToe';
 
-const Td = ({ rowIndex, cellIndex, cellData, dispatch }) => {
+const Td = memo(({ rowIndex, cellIndex, cellData, dispatch }) => {
+    
+    console.log('td rendered');
+
     const onClickTd = useCallback(() => {
         // 기존에 셀 데이터가 있는 경우에는 이벤트를 종료한다.
         // console.log(cellData);
@@ -25,6 +28,6 @@ const Td = ({ rowIndex, cellIndex, cellData, dispatch }) => {
     return (
         <td onClick={onClickTd}>{cellData}</td>
     );
-};
+});
 
 export default Td;
