@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    name: 'minesearch-setting',
+    name: 'games-setting',
     mode: 'development',
     devtool: 'eval',
     resolve: {
