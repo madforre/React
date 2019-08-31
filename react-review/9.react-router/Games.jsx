@@ -1,8 +1,5 @@
 import React from 'react';
 import { BrowserRouter, HashRouter, Link, Route } from 'react-router-dom';
-import NumberBaseball from '../3.NumberBaseball/NumberBaseballClass';
-import RSP from '../5.RockScissorPaper/RSPClass';
-import Lotto from '../6.Lotto/Lotto';
 import GameMatcher from './GameMatcher';
 
 const Games = () => {
@@ -19,7 +16,7 @@ const Games = () => {
             &nbsp;
             <Link to="/game/lotto-generator">로또 생성기</Link>
             &nbsp;
-            <Link to="/game/index">게임 매쳐</Link>
+            <Link to="/game/index?test=querystring&test2=itworks">게임 매쳐</Link>
             {/* <Link to="/lotto-generator">로또 생성기 테스트</Link> */}
             </div>
             <div>
@@ -29,7 +26,18 @@ const Games = () => {
                 {/* <Route path="/number-baseball" component={NumberBaseball}></Route>
                 <Route path="/rock-scissors-paper" component={RSP}></Route>
                 <Route path="/lotto-generator" component={Lotto} /> */}
-                <Route path="/game/:name" component={GameMatcher} />
+                <Route exact path="/" render={(props) => <GameMatcher {...props}/>}/>
+                <Route path="/game/:name" render={(props) => <GameMatcher { ...props} />}/>
+
+                {/* props 넘겨주는 두가지 방법 */}
+
+                {/* 1. 컴포넌트 사용하여 값 넘기기 */}
+                {/* <Route path="/game/:name" component={() => <GameMatcher props={props.abc}/> } */}
+
+                {/* 2. Render Props 사용 */}
+                {/* props 받아서 랜더로 넘긴다. */}
+                {/* <Route path="/game/:name" render={(props) => <GameMatcher props={props.abc}/> } */}
+
             </div>
         </BrowserRouter>
         // </HashRouter>
