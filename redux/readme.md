@@ -10,21 +10,13 @@
 
 리덕스 단점 : 보일러 플레이트가 많다.
 
-## Webpack Entry - Index.js (Client.js)
-
-### import {createStore} from 'redux';
-
-* 리덕스는 대부분 심플한 객체를 리턴하는 형태임. index.js(client.js)
-
-### let store = createStore(reducer);
-
-* add to store. redux를 사용하려면 리듀서를 스토어에 추가해야 한다.
-
 ## Command
 
     npm install redux react-redux
 
 ## Methods
+
+ex) let store = createStore(reducer); 
 
 ### store.getState()
     현재 스토어에있는 데이터를 반환합니다.
