@@ -18,4 +18,5 @@ ReactDom.render(
     <Provider store={appStore}> {/* step 6. - wrap your app ( next step is App.js - access the store. ) */} 
         <Hot />
     </Provider>
-    , document.querySelector('#root'));
+    , document.querySelector('#root')
+);
