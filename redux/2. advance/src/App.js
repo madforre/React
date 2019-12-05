@@ -1,21 +1,27 @@
 import React from 'react';
+import ReactDom from 'react-dom';
+import { hot } from 'react-hot-loader/root'; // apply hot roader
+
 import { Provider } from 'react-redux'; // 리액트와 리덕스를 연결한다.
 import store from './redux/store';
 import CakeContainer from './components/CakeContainer';
 import HooksCakeContainer from './components/HooksCakeContainer';
-import IceCreamContainer from './components/IceCreamContainer;'
+import IceCreamContainer from './components/IceCreamContainer';
 
-function App() {
+const App = () => {
     return (
-        // 포인트는 store를 어디에 공급할 것이냐! 이다.
-        <Provider store={store}>
-            <div className="App">
-                <HooksCakeContainer />
-                <CakeContainer />
-                <IceCreamContainer />
-            </div>
-        </Provider>
+        <>
+            <HooksCakeContainer />
+            <CakeContainer />
+            <IceCreamContainer />
+        </>
     )
-}
+};
 
-export default App;
+const Hot = hot(App); // apply hot roader
+ReactDom.render(
+    <Provider store={store}>
+        <Hot />
+    </Provider>,
+    document.querySelector('#root')
+);

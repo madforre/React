@@ -5,12 +5,11 @@ import { buyCake } from '../redux';
 function CakeContainer(props) {
     return (
         <div>
-            <h2>Number of cakes - {props.numberOfCakes}</h2>
+            <h2>Number of cakes - {props.numOfCakes}</h2>
             <button onClick={props.buyCake}>Buy Cake</button>
         </div>
     )
 }
-
 
 // 액션과 리듀서는 셀렉터라고 생각하자.
 // 이 예제는 간단하지만, 만약 큰 애플리케이션이라면 몇몇개의 데이터는 필요에 맞게 가공되어야 한다.
