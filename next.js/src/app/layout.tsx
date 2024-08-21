@@ -16,7 +16,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     fetch('http://localhost:9999/topics')
       .then(res => res.json())
       .then(result => {
-
+        setTopics(result);
       });
   }, []);
   return (
@@ -26,6 +26,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
         <ol>
           <li><Link href="/read/1">html</Link></li>
           <li><Link href="/read/2">css</Link></li>
+          {topics.map((topic: {id: string, title: string} )=> {
+            return <li key={topic.id}><Link href={`/read/${topic.id}`}>{topic.title}</Link></li>
+          })}
         </ol>
         {/* 아래는 라우터 주소에 해당되는 children page을 리턴한다. */}
         {children}
