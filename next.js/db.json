@@ -1,0 +1,28 @@
+{
+    "topics": [
+        {"id": 1, "title": "html", "body": "html is ... (id 1)"},
+        {"id": 2, "title": "css", "body": "css is ... (id 2)"}
+    ],
+    "posts": [
+        {
+            "id": 1,
+            "title": "test",
+            "author": "typescript"
+        },
+        {
+            "id": 2,
+            "title": "test2",
+            "author": "next.js"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "body": "some comment",
+            "postId": 1
+        }
+    ],
+    "profile": {
+        "name": "madforre"
+    }
+}

@@ -10,3 +10,132 @@
 
     next.js에서는 react와는 달리 npm run start 가 아니라 npm run dev 로 실행해야한다.
 
+* 배포 명령어
+
+    next build - 실 서버를 위한 배포판을 만드는 명령
+
+    next start - 그 배포판을 서비스하는 명령
+
+    개발을 하건 실서버로 빌드를 하건 간에 사용자에게 서비스되는 내용이 저장되는 폴더가 .next 폴더임!
+
+    npn run build -> npm run start 하면
+    이전에는 6.5mb 였던 리소스가 338kb 대로 변경됨! 엄청난 차이가 있죠? (21배정도 차이)
+
+    실서버용으로 배포판을 만들으니 훨씬 슬림해짐!
+
+    사용자에게 서비스할 수 있는 네트워크 환경이 다 갖추어졌다면
+    npm run start 를 실행중인 서버가 실제로 next.js 로 만든 서비스를 싱행하게 된다.
+
+* 라우팅
+
+    http://a.com/dashboard/analytics/
+
+        a.com => domain
+
+        dashboard => segment
+
+        analytics => segment
+
+        dashboard/analytics/ => path
+
+    app 디렉토리에서 url 경로에 해당되는
+
+    page.tsx, layout.tsx 를 만들어서 사용한다. 없으면 부모.. 루트 에서 찾음.
+
+
+    이름을 부여하고 싶으면 폴더 만들 때 read/[id] 이런식으로 만들고
+    [id] 폴더 안에 page.js 또는 page.tsx 파일을 만들면 된다.
+
+* next.js 사용하면 그냥 좋아지는게 있음.
+
+    바로 Server Side Rendering.
+
+    개발자 도구의 메뉴에서 Run Command => Disable Javascript 하면 자바스크립트가 아예 꺼짐.
+
+    리액트는 자바스크립트가 동작하지 않으면 웹페이지가 아예 랜더링이 되지 않는다.
+    하지만 next.js 로 만든 페이지는 이 설정을 하고 리로드해도 랜더링이 잘 됨.
+
+    이것이 가능한 이유? 사용자가 요청하면 서버쪽에서 react를 싱행해서, 그 응답 결과를 .next에 저장해서
+    그것으로 응답해주기 때문!! 따라서 자바스크립트가 아닌 HTML을 응답함!
+
+    확인 했으면 Enable Javascript 다시 해주자!
+
+* next.js 의 단점?!
+
+    Network 로 가서 3g로 바꾸면 일부로 지연현상을 만들 수 있음.
+
+    이미 방문한 적 있는 페이지를 방문할 떄 또다시 페이지를 다운로드 하고 있음!!
+    사용자 입장에서 느리고 답답할 수 있음! (인터넷 잘 안터지는 곳에서는.)
+
+    이런 문제를 극복하려면? a 태그를 Link로 변경!
+
+    웹 페이지를 방문하기 위해 Link에다가 마우스를 올려놓으면? 미리 다운로드 받기 시작함!
+    클릭하자마자 짠 하고 나타남!
+
+    이미 방문한 페이지를 클릭하려고 하면 아예 서버랑 아무런 통신조차 하지 않음! 사용자 입장에서는 빠르고 서비스 제공자 입장에서는
+    돈을 절약할 수 있겠죠!
+
+    이처럼 웹 페이지가 여러 개 페이지 임에도 불구하고 마치 한페이지처럼 동작하는 것을 Single Page Application 이라고 하고,
+    next.js 를 사용할 떄 a 태그를 Link 로 변경하기만 해도 개발자는 싱글 애플리케이션이 되는 놀라움을 경험할 수 있음!
+
+    3g로 느리게 테스트 해보았으면 No throttling 로 다시 복구하자!
+
+* 정적 자원 사용하기
+
+    이미지와 같은 자원 사용할 떄는 해당 파일을 public에다가 위치시키자.
+
+* back-end 간단 설정
+
+    db.json 만들어 준 다음 (mocking file)
+
+    npx json-server --port 9999 --watch db.json 명령어 실행.
+
+    팁: 개발자 도구 클릭해서 network 탭에서 esc 누르면 아래 콘솔창 접근가능해짐.
+
+    서버랑 통신하는 fetch 명령어 사용해보자.
+
+    fetch("http://localhost:9999/topics").then((res) => { return res.json(); }).then(result => { console.log(result) })
+
+    res.json() ===> 서버가 준 데이터가 json 임. 자바스크립트로 컨버팅함. 
+
+    아무튼 json-server를 이용해서 백앤드 서버를 순식간에 구축했다!
+
+    이제 이걸 이용하여 실습하도록 하자.
+
+* 글목록 실습
+
+    리액트 18버젼부터 Server Component, Client Component 구분됨.
+    (이전까지는 클라이언트 컴포넌트 였음.)
+
+    Server Component
+    
+        - secure data
+        - cookie header
+        - fetch
+    
+    Client Component
+
+        - useState
+        - useEffect
+        
+        - onClick
+        - onChange
+
+        - useRouter
+        - useParams
+
+        - fetch
+
+    Next.js 에서 특별한 조치를 하지 않으면
+    Server Component로 간주합니다.
+
+    사용자와 상호작용하는 ex - 버튼 같은 것만 클라이언트 컴포넌트로 만드는 것이 유리하다.
+
+    즉 상호작용하는 것은 클라이언트 컴포넌트로 하고
+    정보를 단순히 보여주는 것은 서버 컴포넌트로 하는 것이 유리하다.
+
+    이런 큰 틀의 개념을 가지고 있자.
+
+    next.js 는 기본적으로 서버 컴포넌트로 간주한다. useEffect, useState 사용하려고 하면 에러 발생함.
+    사용하려면 use client 명시해주어야 한다.
+    
