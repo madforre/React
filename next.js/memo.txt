@@ -1,0 +1,12 @@
+* 환경설정
+
+    (맥에서는 brew install node)
+
+    node -v npm -v 로 설치 확인
+
+    node 설치후
+
+    npx create-next-app@latest . 명령어 입력. (작업 폴더 영역에)
+
+    next.js에서는 react와는 달리 npm run start 가 아니라 npm run dev 로 실행해야한다.
+
