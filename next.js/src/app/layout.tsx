@@ -25,7 +25,16 @@ export default async function RootLayout({ children, }: Readonly<{ children: Rea
   // }, []);
 
   // 서버 컴포넌트로 변경 후
-  const response = await fetch('http://localhost:9999/topics');
+  // const response = await fetch('http://localhost:9999/topics', { next: { revalidate: 0 }}); // 10초가 지나면 캐시가 다시 만들어진다!! (리디렉션 했을 떄 바로 캐쉬가 업데이트 되지 않음.)
+
+  // revalidate 를 0으로 하면 바로바로 적용되긴 하겠죠?
+
+  // type FetchParams = (url:string, options: {[key: string]: { key: any };})
+
+  const response = await fetch('http://localhost:9999/topics', { cache: 'no-store' } ); // 아니면 두번쟤 파라미터로 { cache: 'no-store' } 로 설정해주면 글 목록을 담당하고 있는 데이터가 캐쉬되고 있지 않게 된다!
+  // 라우터 리프래쉬를 하게되면 목록에 추가된 새로운 포스트가 나타나게 된다!
+  // * router.refresh()는 서버 컴포넌트를 강제로 다시 랜더링 하도록 하는 기능입니다. 이 함수를 호출하지 않으면 서버의 데이터를 변경했음에도 서버 컴포넌트가 그대로 입니다.
+
   const topics = await response.json();
 
   return (

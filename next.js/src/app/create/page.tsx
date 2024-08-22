@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation"; // next/router는 페이지 라우터 방식으로 사용되는 next 12 버젼 라우터임. 이상 버젼에서는 네비게이션에서 가져와야함
+
 import { FormEvent, useState } from "react";
 
 // 현재 디렉토리에 layout 파일이 없으면 부모 디렉토리에 가서 layout 파일을 찾음.
@@ -8,6 +9,7 @@ import { FormEvent, useState } from "react";
 // create 폴더 내에 layout.js 또는 layout.jsx가 있으면 ?
 export default function Create() {
 
+  const router = useRouter();
   const [count, setCount] = useState("0");
 
   fetch(`http://localhost:9999/topics`)
@@ -16,7 +18,6 @@ export default function Create() {
       setCount(result.length);
   });
 
-  const router = useRouter();
 
   return (
     // onSubmit은 사용자와 상호작용할 때 실행된다! 이것은 서버컴포넌트에서 다루지 않고 클라이언트 컴포넌트에서 다룸!!
@@ -40,13 +41,16 @@ export default function Create() {
         fetch(`http://localhost:9999/topics`, options)
           .then(res => res.json())
           .then(result => {
-            console.log(result);
             const last_id = result.id;
             router.push(`/read/${last_id}`);
+            router.refresh(); // 리프래쉬가 밑에 있어야 동작함!! 갱신됨!! 왜? 클라이언트 컴포넌트인데 setState 변경 안되므로 화면변화 없으니깐. 정적 페이지잖아!
+            // 푸쉬보다 아래 써야 동작함.. 왜그런지는 모르겠음. 아마 클라이언트 컴포넌트에서 변동이 없으니깐 서버사이드 새로고침해도 클라이언트는 변화가 없는것인지..?
+            // 사전 랜더링된 목록에서 클라이언트로 상호작용 하는 것임. 서버컴포넌트 리프래쉬해도 클라이언트 컴포넌트는 리프래쉬 안되나봄. (일단 추론임)
+            // 라우터 옮기면 클라이언트 컴포넌트도 갱신되나봄.
           })
 
     }}>
-      현재 글 갯수 : {count};
+      현재 글 갯수 : {count}
       <p>
         <input type="text" name="title" placeholder="title" />
       </p>
