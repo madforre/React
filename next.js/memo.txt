@@ -162,4 +162,16 @@
 
     글 읽기 할 차례..
 
+    https://www.youtube.com/watch?v=nHCBiiTYma4&list=PLuHgQVnccGMCwxXsQuEoG-JJ7RlwtNdwJ&index=12
 
+    npm run dev 와
+    npx json-server --port 9999 --watch db.json 키고 시작할 것..
+
+* 글 생성 실습
+
+    혹시라도 npm run dev 해놓고 오류가 발생했다? (파일 수동 삭제시 에러 발생 등등등..)
+
+    rm -rf .next 후 npm run dev 커맨드 창에 다시 입력해주자. (문제가 생긴다면 .next를 지우고 다시 시도해보세요!)
+
+
+    데이터 불러올 때는 async await 쓰던지 then 쓰던지 하면 된다.
