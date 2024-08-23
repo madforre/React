@@ -270,3 +270,26 @@
 
     두번째 인자로 { next: { revalidate: 0 } } 또는 { cache: 'no-store' } 
     등 next.js 에서 제공하는 옵션 활용할 것!
+
+* 글 삭제
+
+    포스트 삭제 후 경로를 
+    useRouter를 이용하여 목록으로 이동시켜주어야 한다.
+
+    useRouter는 클라이언트 컴포넌트에서만 사용이 가능하다.
+
+    라우터 사용법은 아래를 참고하자.
+    
+        import { useParams, useRouter } from "next/navigation";
+
+    nextjs 13버전 이전에는
+    import { useRouter } from 'next/router'; 를 사용했다.
+
+    이제는 useRouter 처럼 라우터와 관련된 훅 사용시
+    import { usePathname, useRouter } from 'next/navigation'; 이런 식으로 해야 되는 듯.
+    (변경 사항. 내 생각에는 내부 함수들이 좀 더 명시적으로 바뀐게 차이인 것 같음.)
+
+
+
+
+    

@@ -18,12 +18,15 @@ export default function Update() { // update는 read, create 기능을 가짐.
    * 총 글 갯수 구하기
    */
   const [count, setCount] = useState("0");
+  const [max_id, setMaxId] = useState("0");
+
   fetch(`http://localhost:9999/topics`)
     .then(res => res.json())
     .then(result => {
-        setCount(result.length);
+      setCount(result.length);
+        const cnt = Math.max(result.map((obj: {[key: string]: string}) => obj.id)).toString();
+        setMaxId(cnt);
     });
-
 
   /**
    * 업데이트할 현재 글 관련 정보 초기화

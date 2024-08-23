@@ -11,13 +11,21 @@ export default function Create() {
 
   const router = useRouter();
   const [count, setCount] = useState("0");
+  const [max_id, setMaxId] = useState("0");
 
+  // Mock DB (json-server) => topics의 인덱스 AutoIncrement 구현
   fetch(`http://localhost:9999/topics`)
     .then(res => res.json())
     .then(result => {
       setCount(result.length);
-  });
 
+      console.log("test");
+      console.log(result.map((obj: {[key: string]: string}) => parseInt(obj.id)));
+      const cnt = Math.max(...result.map((obj: {[key: string]: string}) => parseInt(obj.id))).toString();
+      setMaxId(cnt);
+
+      console.log(cnt);
+    });
 
   return (
     // onSubmit은 사용자와 상호작용할 때 실행된다! 이것은 서버컴포넌트에서 다루지 않고 클라이언트 컴포넌트에서 다룸!!
@@ -28,8 +36,7 @@ export default function Create() {
         title = title.value;
         body = body.value;
 
-        const new_cnt = (parseInt(count)+1).toString();
-
+        const new_cnt = (parseInt(max_id)+1).toString();
         const options = {
           method: 'POST',
           header: {
