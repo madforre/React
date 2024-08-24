@@ -18,7 +18,7 @@ export const ButtonCtrl = () => {
           <li><input type="button" value="delete" 
             onClick={() => {
               const options = { method: "DELETE" };
-              fetch('http://localhost:9999/topics/' + id, options)
+              fetch(process.env.NEXT_PUBLIC_API_URL + 'topics/' + id, options)
                 .then(response => response.json())
                 .then(result => {
                   console.log(result);

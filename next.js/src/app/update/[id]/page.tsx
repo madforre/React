@@ -20,7 +20,7 @@ export default function Update() { // update는 read, create 기능을 가짐.
   const [count, setCount] = useState("0");
   const [max_id, setMaxId] = useState("0");
 
-  fetch(`http://localhost:9999/topics`)
+  fetch(process.env.NEXT_PUBLIC_API_URL + 'topics')
     .then(res => res.json())
     .then(result => {
       setCount(result.length);
@@ -35,7 +35,7 @@ export default function Update() { // update는 read, create 기능을 가짐.
   const [post, setPost] = useState<Post>({title: "", body: ""});
 
   useEffect(() => { // 클라이언트 컴포넌트인데 read 기능도 표현시키려면 useEffect써서 데이터 가져와야함. (사이드이펙트 해결)
-    fetch('http://localhost:9999/topics/' + id)
+    fetch(process.env.NEXT_PUBLIC_API_URL + 'topics/' + id)
         .then(resp => resp.json())
         .then(result => {
             console.log(result)
@@ -63,7 +63,7 @@ export default function Update() { // update는 read, create 기능을 가짐.
           body: JSON.stringify({title, body})
         }
 
-        fetch(`http://localhost:9999/topics/` + id, options)
+        fetch(process.env.NEXT_PUBLIC_API_URL + `topics/` + id, options)
           .then(res => res.json())
           .then(result => {
             const last_id = result.id;

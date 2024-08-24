@@ -14,7 +14,7 @@ export default function Create() {
   const [max_id, setMaxId] = useState("0");
 
   // Mock DB (json-server) => topics의 인덱스 AutoIncrement 구현
-  fetch(`http://localhost:9999/topics`)
+  fetch(process.env.NEXT_PUBLIC_API_URL + `topics`)
     .then(res => res.json())
     .then(result => {
       setCount(result.length);
@@ -45,7 +45,7 @@ export default function Create() {
           body: JSON.stringify({title, body, id: new_cnt})
         }
 
-        fetch(`http://localhost:9999/topics`, options)
+        fetch(process.env.NEXT_PUBLIC_API_URL + `topics`, options)
           .then(res => res.json())
           .then(result => {
             const last_id = result.id;

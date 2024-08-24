@@ -1,7 +1,7 @@
 export default async function Read( // 데이터를 읽어서 출력한 뿐이다? => 서버 컴포넌트로 사용도록 하자.
   props: Readonly<{ children: React.ReactNode, params: {id: string} }> 
 ) {
-  const response = await fetch(`http://localhost:9999/topics/${props.params.id}`, 
+  const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `topics/${props.params.id}`, 
     { next: { revalidate: 0 } }
   );
 
