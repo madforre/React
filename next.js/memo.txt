@@ -441,7 +441,6 @@ Tutorial 2
 
         "dev": "next dev" 추가.
 
-
         dev 명령어를 실행하면 Next JS를 실행시킬 수 있다.
         그 뒤엔 NextJS가 내 코드를 찾을 것임.
         왜? NextJS는 사용자가 프레임워크를 호출하는 것이 아닌
@@ -468,10 +467,8 @@ Tutorial 2
 
     8. npm run dev 실행
 
-
         It looks like you're trying to use TypeScript but do not have the required package(s) installed.
         타입스크립트 사용하시는 것 같네요 하고 문구 뜸.
-
 
     - 아무것도 import 하지 않았음! 근데 동작한다! ReactJS 조차 import 하지 않았지만. 동작함.
         프레임워크임.
@@ -484,4 +481,216 @@ Tutorial 2
         자동 새로고침도 됨.
 
 ------------------------------------------------------
+
+Recap
+
+    Next.js는 프레임워크다.
+    우리가 올바른 폴더에 정확한 이름의 파일이 들어가 있으면
+    알아서 웹사이트를 만들어 줄 것임.
+
+    Next.js 프로젝트를 생성하기 위해선 그저
+    package.json 로 Node.js 프로젝트를 생성하고
+    npm install 로 next, react, react-dom를 설치하기만 하면 된다.
+    그리고 dev라는 script를 추가해주면 된다. (next dev 호출하도록.)
+
+    app폴더 생성해줘야함.
+    page.tsx, layout.tsx 만들어줘야함. 얘네를 Next.js가 참조하거든.
+    단 참조하는 컴포넌트는 default 컴포넌트로 export 되어야 한다.
+    (export default 된 리액트 컴포넌트여야함.)
+
+    react를 따로 import 안해도 next.js가 알아서 해줘서 편리함.
+
+    * default export 객체는 하나만 지정할 수 있다.
+
+------------------------------------------------------
+
+app - layout.tsx, page.tsx 를 root segment 라고 한다.
+
+* routing
+
+    Next.js는 파일시스템을 이용하여 라우팅을 처리한다.
+    app폴더 내에서 폴더명을 about-us 라고 만들면, /about-us 로 이동하게 된다.
+    about-us로 이동했을 떄 NextJS가 렌더링할 UI를 제공하지 않으면 404가 뜸.
+    page.tsx 생성하여 작성해주면 정상 동작함.
+    UI를 작성하여 리턴해주도록 하자.
+
+    ex) 
+
+        export default function AboutUs() {
+            return <h1>About us!</h1>;
+        }
+
+    react-router-dom 처럼 수동적으로 알려줄 필요가 없음.
+    파일 시스템을 이용해서 경로를 지정해주면 됨.
+    해당 경로 폴더안에 page.tsx를 꼭 생성해야함.
+
+    page가 없으면 404 리턴함. 즉 이 폴더의 모든 의도와 목적은 url을 생성하기 위한 것임.
+    page.tsx나 page.jsx를 생성해줘야함.
+
+    page.tsx가 아니면 그냥 컴포넌트임.
+    import해서 사용하면 됨. 단, url은 되지 못할 것임.
+    page가 있는 폴더에 components를 만드는 건 뭔가 조금 이상해서 선호하지는 않지만
+    할 수는 있음. 공식문서도 그렇게 작성하기도 함. 많은 사람도 그렇게 하기도 하고.
+
+    아무튼 page.tsx만 이해하기만 하면 괜찮음.
+
+------------------------------------------------------
+
+* not-found.tsx
+
+    특별한 파일. app 폴더에 작성.
+
+    ex) 
+
+        /app/not-found.tsx 에 작성.
+
+        export default function NotFound() {
+            return <h1>Not found!</h1>;
+        }
+
+* usePathname은 "use client"; 써줘야함. 상단에.
+
+    왜? 클라이언트 컴포넌트니까.
+
+------------------------------------------------------
+
+next.js 는 리액트 컴포넌트를 가져와서 html로 변환하여 전달해줌.
+
+Next.js Rendering? react code -> html !
+
+* 클라이언트 사이드 렌더링
+
+    client는 JavaScript를 로드하고, 그 후에 JavaScript가 UI를 빌드한다.
+
+* next.js로 빌드할 때는 자동으로 default로 서버사이드 렌더링이 된다.
+
+    UI는 이미 빌드되어있고 HTML도 존재함.
+    JavaScript 꺼도 동작함. HTML을 전달받기 떄문.
+
+    "use client" << 이거 쓴다고 해서 클라이언트사이드 랜더링이라고 헷갈릴 수 있음.
+    이거 써도 서버사이드 랜더링임!!
+
+    백앤드에서 랜더링됨!!! 첫번째로 모든 컴포넌트와 페이지들은 먼저 백앤드에서 랜더링된다!!
+    그것들은 HTML로 변환되어 브라우저에 넘겨지게 됨!!!
+
+    장점! UI를 빌드하는데 React를 쓸 필요가 없음. React는 그 후에 추가됨.
+    (이걸 하이드레이션이라고 하는데 나중에 공부할 거임.)
+
+    "use client" 여부와 상관 없이
+    아무튼 컴포넌트와 페이지들은 전부 백앤드에서 랜더링이 먼저 된다.
+    랜더링이란? 자바스크립트 펑션을 가져와서 브라우저가 이해하는 HTML로 변환하는 작업을 의미함.
+
+    Next.js에서는 HTML결과물은 브라우저에 주어지게 된다. 
+    자바스크립트를 활성화하던 비활성화하던 볼 수 있는 이유임.
+
+* hard navigation -> a태그의 href만 사용. 앵커태그만 그냥 누르고 있는 거임.
+
+* Next.js 의 Link Component
+
+    client side only navigation.
+
+    React가 hydrate 되면 훨씬 빠름.
+    앵커태그에 클릭이 발생할 떄 리액트가 끼어들게 됨.
+    페이지 전체를 reload 하지 않고 빠르게 nagivate 할 수 있게 됨.
+
+* 처리 순서
+
+    - 라우터 링크 접근 -> Boring Dummy HTML -> :) -> init(Boring HTML)
+
+    (일단 사용자는 백앤드에서 생성된 Boring HTML을 받고 오 빠르네 하고 기뻐함)
+    
+    Boring HTML을 받고 나서 interactive 하게 해줌.
+    ex -> 받고나서 갑자기 navigation 이 React Component 가 되는 것.
+    Initialize React application ! )자바스크립트.. 리액트가 로딩 되고 나면.)
+
+* 1씩 더해지는 카운팅 버튼 기능인 경우 처리순서
+
+    자바스크립트 로딩 안되었으면 클릭해도 0이 그대로일 것임.
+    자바스크립트가 로드되면 React가 버튼에 이벤트리스너를 연결시킬 것임.
+    그리고 state 같은 것들과 연결시킴.
+    그리고 나서 우리의 components가 interactive 해지는 것임!
+
+    /about-us ------> <button>0</button> -------> :) (사용자가 기뻐함. 빨리 로딩되는 것처럼 보이니까.)
+    --------> 
+    기뻐하는 동안 즉시 뒤쪽에서 우리는 프레임워크를 로드하고, 프레임워크가 Initialize 되는 때에
+    비로소 그 버튼은 우리가 만든 onClick eventListener 가 연결된 버튼이 되는 것임!
+
+    이게 바로 hydration 프로세스!!
+
+    먼저 0만 적혀있는 쌩 Html인 simple 버튼을 사용자가 먼저 받고,
+    그리고 나서 React를 initialize하여 onClick을 부착해
+    작성한 기능을 수행하도록 해준다.
+    그게바로 hydration이다.
+
+    (비유 => dehydrated된 딸기, 신선한 hydrated된 딸기를 생각하자.)
+    dehydrated means remove the water.
+    말라비틀어진 딸기.. 형태만 있는 boring html이라고 생각하자.
+
+    React나 프레임워크가 client에 로드되면 우리는 그 애플리케이션을 hydrate 하는 것임.
+    그러면 그걸 완전한 functional interactive app으로 변환시킬 수 있음.
+
+* Hydration ?
+
+    단순 HTML을 React application 으로 초기화하는 작업임!!
+    (동결건조된 건더기나 과일에 수분 공급하는, 활력을 불어넣는 느낌!!)
+
+    뒷단에서 우리는 next.js를 로딩하고 framework를 초기화하고 
+    버튼 같은 기능 위에 React application을 생성해준다.
+    그러면 그 버튼은 interactive 해지고, eventListener 가 추가된다.
+
+    interactive 하게 만들어줌.
+
+    이것이 하이드레이션 프로세스
+
+* server side render 는 모든 컴포넌트에 발생한다.
+
+* client에서 hydrate 되는 컴포넌트.. 클라이언트에서 interactive 하게 만들어질 컴포넌트는
+    오직 use client 지시어를 가진 컴포넌트들 뿐이다.
+
+* 'use client' 사용하면?
+
+    이 component는 client에서 interactive 해야 해. 라고 알려주는 것임.
+
+    따라서 초기 load 단계에서 next.js는 이 component를 render 할 것임.
+    그리고 HTML을 사용자에게 주고 나서 이벤트리스너들을 추가할 컴포넌트를 hydrate 할 거임.
+    ( use client를 상단에 적어 넣은 경우에만 발생!! )
+
+    component가 interactive 하다면? useState 사용해야됨. 즉, "use client"; 적어줘야 함.
+
+    "use client"는 오직 client 에서만 render 된다는 것을 의미하지 않는다.
+    back-end에서 render 되고 front-end 에서 hydrate, interactive 됨을 의미한다.
+
+* "use client" 를 선언하지 않으면 기본적으로 모두 server component 가 된다.
+
+    use client components 도 server에서 먼저 render 되고 나서 hydrate 된다.
+
+    server components는 server에서 먼저 render 되고, hydrate 는 되지 않음.
+    정적이라는 의미인듯. 즉 JavaScript를 사용자가 적게 다운받아도 된다는 의미이다.
+
+* 내가 프레임워크에게 어떤 component 가 interactive 해지고 어떤 component 가 그저 멍청하고
+    지루한 HTML 이 될지 말해주면 그건 사용자가 다운로드 받을 JavaScript 의 양이 적어짐을 의미한다.
+
+    클라이언트에 딱 한번만 랜더되고 다시는 랜더될 일이 없다면?
+    어떠한 useState 나 onClick events 같은 것들이 없을 경우?
+    그러면 사용자에게 그 server component를 위한 코드를 다운로드 받게 끔 할 필요가 있을까?
+    필요 없쥬?
+    그러면 페이지는 로딩 속도가 빨라지겠죠?
+    이게 바로 server side rendering 인거시다.
+
+    hydration 사용을 구분해주기 위해서 use client 를 적어주는 거고.
+
+    서버 컴포넌트를 사용하는 것은 현명한 방법이다. 왜???
+    서버 컴포넌트를 data fetching 을 할 때 엄청난 결과를 가져오기 때문!!!!
+
+    서버 컴포넌트에서 데이터가 패치되는 것을 보면 분명히 기뻐할 것임
+    일반 리액트 애플리케이션에서 데이터 패칭을 해온 방식과 비교해서요.
+    (useQuery, React Query, swr, useState, useEffect ...
+    데이터를 가져올 떄 이 녀석들 위주로 사용하는 건 끝났다고 할 수 있음. 곧 보게 될 것임!!!)
+
+* 서버 구성 요소는 클라이언트 구성 요소로 가져올 수 없음. (import 불가능)
+
+    - 단, 서버 구성 요소는 클라이언트 구성 요소로 Props로 전달 가능.
+
+
+
 
