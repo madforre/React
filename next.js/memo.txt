@@ -687,9 +687,27 @@ Next.js Rendering? react code -> html !
     (useQuery, React Query, swr, useState, useEffect ...
     데이터를 가져올 떄 이 녀석들 위주로 사용하는 건 끝났다고 할 수 있음. 곧 보게 될 것임!!!)
 
-* 서버 구성 요소는 클라이언트 구성 요소로 가져올 수 없음. (import 불가능)
+* 서버 구성 요소는 클라이언트 구성 요소를 직접 가져올 수 없음. (import 안됨)
 
     - 단, 서버 구성 요소는 클라이언트 구성 요소로 Props로 전달 가능.
+      아래는 사용 예시 코드이다. (app/page.tsx)
+
+    // This pattern works:
+    // You can pass a Server Component as a child or prop of a
+    // Client Component.
+    import ClientComponent from './client-component'
+    import ServerComponent from './server-component'
+    
+    // Pages in Next.js are Server Components by default
+    export default function Page() {
+        return (
+            <ClientComponent>
+            <ServerComponent />
+            </ClientComponent>
+        )
+    }
+
+
 
 
 
