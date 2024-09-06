@@ -687,7 +687,7 @@ Next.js Rendering? react code -> html !
     (useQuery, React Query, swr, useState, useEffect ...
     데이터를 가져올 떄 이 녀석들 위주로 사용하는 건 끝났다고 할 수 있음. 곧 보게 될 것임!!!)
 
-* 서버 구성 요소는 클라이언트 구성 요소를 직접 가져올 수 없음. (import 안됨)
+* 서버 구성 요소는 클라이언트 구성 요소를 직접적으로 가져올 수 없음. (import 안됨)
 
     - 단, 서버 구성 요소는 클라이언트 구성 요소로 Props로 전달 가능.
       아래는 사용 예시 코드이다. (app/page.tsx)
@@ -702,13 +702,155 @@ Next.js Rendering? react code -> html !
     export default function Page() {
         return (
             <ClientComponent>
-            <ServerComponent />
+                <ServerComponent />
             </ClientComponent>
         )
     }
 
+2.6 Recap (요약... 복습)
+
+    next.js는 back-end에서 우리 application을 pre render 할 것임.
+    모든 component를 가져가서 따분하고 non interactive한 HTML로 바꾸게 됨.
+    그리고 그것을 사용자에게 줄 것임.
+    사용자는 전달받은 HTML에서 프레임워크와 React.js를 initialize 할 것임.
+    그리고 무슨 일이 발생하느냐? use client 명령어를 가진 컴포넌트가 hydrate 될 거임.
+    hydrate는 interactive 된다는 뜻임.
+
+    이젼 버젼들은 모든 component 가 hydrate 됐었음..
+
+    그정 UI의 일종인 컴포넌트 라면? 정적으로 처리해도 되니까 interactive 할 필요가 없음.
+    front-end 에서 hydrate 할 필요가 없겠죠.
+
+    hydration은 우리가 받은 HTML의 위에서 React application을 실행해야 한다는 뜻이다.
+
+    hydrate는 그냥 eventListeners 를 추가하고, interactive 하게 만드는 거임.
+    그냥 어떠한 HTML을 실제 interactive한 React component로 바꾸는 것임.
+    (onClick, setState, useState 등 이런 것들을 사용해서.)
+
+    이 방식의 이점이란? 바로 사용자들이 다운로드 받아야 하는 자바스크립트 코드 양이 줄어든다는 것임!
+    client component만 다루는 작은 자바스크립트를 다운로드 받게 됨.
+
+    * use client는 client 에서만 render 한다는 의미가 아님!!
+        client 에서도 render 된다는 의미이다!! (also client)
+
+        - use client가 중요한 이유???
+        
+            어떤 컴포넌트가 하이드레이트 되는지, 즉 어떤 것이 인터랙티브를 필요로 하는지,
+            어떤 것이 자바스크립트가 필요한지, 어떤 것이 불필요한지 등을 결정할 때 중요하다.
+
+    * 모든 구성 요소들은 백앤드에서 먼저 랜더된다.
+
+        클라이언트 컴포넌트던 서버컴포넌트던지 간에, 백앤드에서 먼저 서버 사이드 랜더로 pre-render 됨
+        use client 명령어가 있든 없든 상관 없이. 백앤드에서 전부 pre-render 됨.
 
 
+    클라이언트 컴포넌트 안에는 서버 컴포넌트를 가질 수 없음.
+    use client를 사용하면 모든 children 이 client component 가 된다.
+    (나중에 바뀔 수도 있음. 클라이언트 컴포넌트 안에 서버 컴포넌트를 넣는 말도 안되는 기능이 나올 수도 있음.)
+
+    * 이것을 기억하자...
+
+        - 모든 것이 서버사이드 랜더링 된다. 모든 것이 pre render 되어서 HTML로 변환된다.
+            그 후에 client components 만이 hydrate 되고 interactive 하게 되는 것!!
+
+        그러면 서버 컴포넌트는 코드가 서버에서만 실행된다?!
+        오 그러면.. 여기서 DB와 통신 할 수 있게 된다. 이 코드는 서버에서만 실행되기 때문!
+        여기서 API key를 사용해서 API를 fetch 한다고 하면 이 코드는 client로는 절대 가지 않기 때문에
+        보안에 신경쓰지 않아도 되게 됨!!
+
+        DB 통신을 해도 되고, 모든 API keys를 넣어도 상관없게 됨!! 멋진 일임.
+
+        이제 서버 컴포넌트에서 data fetching 하는 법을 알아볼 것임.
+        (client components 에서 data fetching 을 useState, useEffect를 이용하여 기존에 하던 것과 비교해서!)
+
+        i' ll see u on the next one... (next time)
+
+* Layouts
+
+    about-us 페이지는 랜더링이 어떻게 될까?
+
+    <RootLayout>
+        <AboutUs/>
+    </RootLayout>
+
+    내가 가려는 페이지가 layout.tsx의 childeren prop 이 된다.
+
+    - 폴더 별로 레이아웃 파일 생성 가능.
+
+    해당 폴더 경로에 있는 페이지 파일을 감싸주는 레이아웃을 만들 수 있음.
+    
+    * 상위 폴더로 이동하여 레이아웃 파일을 확인하고,
+      레이아웃 파일이 있는 경우에는 해당 레이아웃 파일을 사용하여 하위 항목을 랜더링 한다.
+
+    레이아웃들이 서로 상쇄 된다고 생각하면 안됨!
+    레이아웃은 중첩이 가능함! they get nested.
+
+    - first of all, next.js taking the root layout.
+
+        it is ready to render something.
+        
+        it checks the url, then go to the about-us folder.
+        is there a layout file here?
+        answer is yes.
+
+        then...
+
+        <Layout>
+            <AboutUsLayout>
+            </AboutUsLayout>
+        </Layout>
+
+        next url.. next folder..
+        is there anything?
+        nope..
+
+        next... is there anything?
+        nope..
+
+        next folder .. sales.. is there anything? yes.
+
+        Is there A layout there? no it isn't!
+
+        okay, I'm going to render only the page.
+
+        so then pages call sales.
+
+        <Layout>
+            <AboutUsLayout>
+                <Sales />
+            </AboutUsLayout>
+        </Layout>
+
+        Because we are nesting layouts!
+        
+        They don't cancel each other layout.
+
+    레이아웃들은 서로 중첩된다.
+
+    next js 는 url을 통해 폴더로 들어가서 레이아웃을 확인한다.
+    그 레이아웃을 밖에 있는 다른레이아웃 안에 렌더링한다!! (inside of the other layout!)
+
+    하위 레이아웃을 상위 레이아웃이 먹고.. 먹고.. 먹고...
+    마지막으로 루트 레이아웃이 전부를 다 먹는 구조임.
 
 
+        <Layout>
+            <AboutUsLayout>
+                <SalesLayout>
+                    <Sales />
+                </SalesLayout>
+            </AboutUsLayout>
+        </Layout>
 
+    레이아웃이 상쇄된다고 생각하지 말자!!!
+    레이아웃이 대체되는 것이 아님. 중첩되는 것임.
+
+    가까운 레이아웃 부터 찾고 상위 경로 찾고 찾고 찾고 하는 식임.
+    (parent.. parent.. parent.... root!)
+
+    암튼 레이아웃이 중첩된다는 게 중요함!
+    파일명이 layout으로 전부 같기 때문에 헷갈릴 수도 있겠구나..
+    페이지도 마찬가지로 이름 다 똑같으니까 뭘 열어볼지 헷갈릴 수가 있겠네.
+
+    아무튼 프레임워크가 알아서 다 해줄 거니까 저렇게 컴포넌트
+    안에 컴포넌트 안에 컴포넌트 이제 명시해줄 필요 없음.
