@@ -935,4 +935,21 @@ Next.js Rendering? react code -> html !
         [id] 또는 [name] 이런 식으로 폴더를 만들어줘서 사용하면 된다.
         next.js가 알아서 url에 있는 id 나 name 을 인식하여 page 컴포넌트를 호출해줌!
 
+------------------------------------------------------
 
+DATA FETCHING
+
+    실습 데이터 references - nomad coders api
+
+        Here are all the endpoints you can access
+        /: This page
+        /movies: List popular movies
+        /movies/:id: Get movie by :id
+        /movies/:id/credits: Get credits for a movie by :id
+        /movies/:id/videos: Get videos for a movie by :id
+        /movies/:id/providers: Get providers for a movie by :id
+        /movies/:id/similar: Get similar movies for a movie by :id
+
+    서버 컴포넌트로 data fetching 하는게 얼마나 멋진 일인지 알게 될 예정임
+
+    3.1 할 차례...
