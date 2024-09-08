@@ -44,6 +44,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(movies)/movies/[id]/page.js"
+    ],
+    "/(home)/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(home)/loading.js"
     ]
   }
 }
