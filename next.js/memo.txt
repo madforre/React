@@ -1073,6 +1073,40 @@ DATA FETCHING
 
     => 병렬적으로 데이터 불러와지고, 서로 영향은 주지 않음.
 
+        * 랜더링할 컴포넌트를 async 컴포넌트로 바꾸고 Suspense로 감싸주면 된다.
 
+* Recap
+
+    Next.js 프레임워크가
+    page await... 로딩되는 동안 loading component가 page 파일의
+    UI를 대체.
+
+    2가지를 fetch 할 경우 Promise.all, Suspense 사용 가능.
+
+    Promise.all 의 경우 두 Promise가 전부 끝날 때 까지 기다려야 함..
+    가장 긴 요청만큼 시간이 걸리게됨.
+
+    다른 최적화 방법인 React JS 의 Component 인 Suspense 를 사용할 수 있음.
+    로딩 상태를 분리 할 수 있는게 장점임!
+
+    page 파일에서 fetch를 다이렉트로 하는 경우, 
+    데이터를 불러오는 동안 로딩 컴포넌트를 보여주게 됨.
+
+    개발자 경험이 매우 좋구나 Next.js 가~
+        isLoading이나 setIsLoading(true), setIsLoading(false)
+        이런거 안해도 되니까.. 이런 것들과 작업하지 않아도 되니까.
+
+* Error Handling
+
+    불러오는 API와 연결이 끊기면 어떻게 될까? 어떻게 처리할까?
+
+    error.tsx 만들자!
+    해당 페이지에 에러가 있다고 해서 전체 어플리케이션이 다 죽으면 안됨.
     
+    에러파일을 페이지 옆에다가 만들면 됨. 끝.
+    (해당 페이지에만 에러가 적용됨.)
 
+암튼 이젠 React.js에서 가져오고 오류를 처리하고 상태를 로드하는 것이 정말 쉬워졌다.
+(보일러 플레이트 코드가 너무 많았는데.. 해결 많이 된듯?)
+
+    thanks for being here..
