@@ -1110,3 +1110,59 @@ DATA FETCHING
 (보일러 플레이트 코드가 너무 많았는데.. 해결 많이 된듯?)
 
     thanks for being here..
+
+------------------------------------------------------
+
+DEPLOYMENT 할 차례...
+
+    vercel 회원가입하라고 함
+
+* CSS Modules
+
+    style을 분리해서 css module를 만들 수 있다.
+
+    navigation.module.css 처럼
+
+    이름에 .module.css 를 갖고 있어야 한다. 이게 중요한 점임.
+    (파일의 이름 자체는 중요하지 않음)
+
+    자바스크립트 파일처럼 사용할 곳에서 import 해서 사용함.
+    
+    ex) import styles from "../styles/navigation.module.css";
+
+        여기서 styles는 내 모듈 파일의 모든 classname 들을 보유한 
+        javascript object 인 것처럼 인식한다고 상상하면 된다.
+        (조금 이상하더라도..)
+
+        ...
+
+        <nav className={styles.nav}>
+
+        ...
+
+        아무튼 이런식으로 사용하면 class의 충돌은 없을 것임.
+        css modules 의 장점 중 하나.
+
+    일반적인 것은 global에 넣어야함.
+    css modules 사용시 반드시 지정한 클래스명으로 시작해야함.
+    styles.nav 면 .nav ul 로 써야함. ul 말고. 쌩 nav 도 안됨.
+    아니면 클래스를 새로 만들고 그냥 또 사용하던지.
+
+        ex) 
+            .list {
+                display: flex;
+            }
+
+            ...
+
+            <ul className={styles.list}>
+
+            .nav ul 로 쓰던 .list로 지정해서 className에 이어주던
+            사용하는 사람이 선택할 수 있음.
+
+    아무튼 따로 configuration... 따로 뭐 설정할 필요도 없이
+    css_modules 동작함. 사용할 수 있음.
+
+
+
+    

@@ -1,0 +1,8 @@
+.nav {
+    background-color: red;
+    padding: 50px 100px;
+}
+
+.list { /* .nav ul 로 안하고 ul 로 하면 에러날 것임. */
+    display: flex;
+}
