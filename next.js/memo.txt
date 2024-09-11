@@ -1254,3 +1254,11 @@ styles 폴더 만드는 경우
 
     허용된 것들만 export 할 수 있음.
 
+* vercel 배포시.... missing directory 관련 에러나는 경우..
+
+    Build & Development Settings 에서
+
+    Build & Development Settings 에서 Framework Preset 을
+    Next.js 로 설정해주면 배포 성공
+
+
