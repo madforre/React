@@ -1163,6 +1163,39 @@ DEPLOYMENT 할 차례...
     아무튼 따로 configuration... 따로 뭐 설정할 필요도 없이
     css_modules 동작함. 사용할 수 있음.
 
+    페에지 옆이나 라우터 그룹에다가 그냥 module.css 생성해버려도 말이 되긴함.
+
+styles 폴더 만드는 경우
+
+    모듈 파일 몰아서 보관하는 이유?
+    컴포넌트가 많지 않다면 이렇게 할 수도 있겠지만
+
+    100개의 스타일 이 있다면 폴더를 만들어서
+
+    footer안에 styles를 만들어서 관리하던지 해줌.
 
 
+* useRouter 사용시 
+
+    import { useRouter } from "next/navigation";
+
+    로 해야 에러 안남.
+
+* 인터렉티브한 상황에서는
+    서버에는 onClick 존재하지 않으므로 클라이언트 컴포넌트로 사용해야함.
+
+    클라이언트 컴포넌트가 optimization 되어있지 않고
+    무슨 수를 써서라도 피해야 된다고 생각하지 말자.
     
+    상황에 따라 유연하게 사용할 것.
+
+
+    클래스네임 계속 쓰는이유? 더 명확하다고 생각하기 때문.
+    큰 컴포넌트인 경우 쉽지 않음.
+
+* CSS grid  
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+    auto-fit 이 반응형 쉽게 해줌!

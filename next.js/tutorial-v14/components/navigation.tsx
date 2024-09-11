@@ -12,7 +12,7 @@ export default function Navigation() {
     const [count, setCount] = useState(0);
     return (
         <nav className={styles.nav}>
-            <ul className={styles.list}>
+            <ul>
                 <li>
                     <Link href="/">Home</Link> 
                     {path === "/" ? "⭐️" : ""}
