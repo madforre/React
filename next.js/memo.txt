@@ -1199,3 +1199,39 @@ styles 폴더 만드는 경우
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
     auto-fit 이 반응형 쉽게 해줌!
+
+* Dynamic Metadata
+
+    export async function generateMetadata() {
+        return {
+            title: "lalalalal",
+        }
+    }
+
+    page 컴포넌트가 props로 id 전달받는 것 처럼
+    generateMetadata에서도 동일한 일이 일어난다.
+
+    - metadata를 만들기 위해 api를 호출하고 
+        또 다른 정보를 불러오기 위해 api를 호출하는게 안좋은 방법으로 보일 수 있다.
+
+        최신버젼 Next.js는 괜찮다?
+        옛날이였으면 안좋은 방법이였음.
+        최신버젼은 fetch 데이터를 캐싱하기 때문!
+
+        제너레이트메타데이터에서 처음 패치 하고 나서는 fetch가 한번 실행되지만
+        영화 정보를 얻기 위해 두번째로 fetch 할 때에는 캐시 된 응답을 받게 된다.
+        api가 호출되지 않는다는 것을 의미함!
+
+    동적으로 메타데이터를 변경할 수 있다!
+
+    id라는 파라미터는 페이지 컴포넌트에 제공되는 객체이다.
+    동시에 generateMetadata 라는 함수에도 전달된다.
+
+    generateMetadata를 export 하는 것을 잊지 말자!
+    프레임워크가 항상 이 함수를 찾을 거임.
+    만약 발견한다면 이 함수를 호출할 것임.
+
+    getMovie 함수를 두번 호출하는게 나쁜게 아니라는 것을 기억하자.
+    한번은 generateMetadata, 한번은 movie info를 위해서.
+    왜냐하면 우리의 요청은 캐싱되기 때문!
+
