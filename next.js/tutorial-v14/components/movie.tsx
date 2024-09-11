@@ -5,6 +5,7 @@ import styles from "../styles/movie.module.css";
 import { useRouter } from "next/navigation";
 
 interface IMovieProps {
+    key: string,
     title: string;
     id: string;
     poster_path: string;

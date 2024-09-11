@@ -1,1 +1,1 @@
-export const API_URL = "https://nomad-movies.nomadcoders.workers.dev/movies"; // 나중에 또 쓸거라 export
+export const API_URL = "https://nomad-movies.nomadcoders.workers.dev/movies";
