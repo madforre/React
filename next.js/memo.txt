@@ -1235,3 +1235,22 @@ styles 폴더 만드는 경우
     한번은 generateMetadata, 한번은 movie info를 위해서.
     왜냐하면 우리의 요청은 캐싱되기 때문!
 
+* prefetch
+
+    굉장히 멋진 자동화임.
+    모든 페이지를 prefetch 할 경우... 부하가 심하면 DB를 죽일 수도 있음.
+
+    링크 노출되면 미리 요청을 해줌
+
+* next build => 어플리케이션을 실제로 production 용으로 만들어줌
+
+* next start => 어플리케이션을 production 모드로 시작해줄거임
+
+
+    (vercel 사용시 vercel 이 호출해주는 부분들임.)
+
+
+* page.tsx에서는 아무거나 export 할 수 없다.
+
+    허용된 것들만 export 할 수 있음.
+
